@@ -1,8 +1,17 @@
+import { BrowserRouter, Routes, Route } from "react-router";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+
 function App() {
   return (
-    <>
-      <h1>Welcome to Chiral</h1>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+
+        
+      </Routes>
+    </BrowserRouter>
   );
 }
 
