@@ -1,6 +1,18 @@
 const { Note } = require("../models");
 
 class NoteController {
+  // Helper function to clean note response (remove legacy fields)
+  static cleanNoteResponse(note) {
+    return {
+      id: note.id,
+      userId: note.userId,
+      highlightedText: note.highlightedText,
+      explanation: note.explanation,
+      originalContext: note.originalContext,
+      createdAt: note.createdAt,
+      updatedAt: note.updatedAt,
+    };
+  }
   static async createNote(req, res, next) {
     try {
       const { highlightedText, explanation, originalContext } = req.body;
@@ -22,7 +34,7 @@ class NoteController {
 
       res.status(201).json({
         message: "Note created successfully",
-        note,
+        note: NoteController.cleanNoteResponse(note),
       });
     } catch (error) {
       next(error);
@@ -42,7 +54,7 @@ class NoteController {
       });
 
       res.json({
-        notes: notes.rows,
+        notes: notes.rows.map((note) => NoteController.cleanNoteResponse(note)),
         total: notes.count,
         currentPage: parseInt(page),
         totalPages: Math.ceil(notes.count / limit),
@@ -67,7 +79,7 @@ class NoteController {
         throw { name: "Not Found", message: "Note not found" };
       }
 
-      res.json({ note });
+      res.json({ note: NoteController.cleanNoteResponse(note) });
     } catch (error) {
       next(error);
     }
@@ -97,7 +109,7 @@ class NoteController {
 
       res.json({
         message: "Note updated successfully",
-        note,
+        note: NoteController.cleanNoteResponse(note),
       });
     } catch (error) {
       next(error);

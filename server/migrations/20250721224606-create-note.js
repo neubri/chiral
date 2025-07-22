@@ -19,27 +19,17 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      articleId: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        references: {
-          model: "Articles",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
-      },
       highlightedText: {
         type: Sequelize.TEXT,
+        allowNull: false,
       },
       explanation: {
         type: Sequelize.TEXT,
+        allowNull: false,
       },
       originalContext: {
         type: Sequelize.TEXT,
-      },
-      markdownContent: {
-        type: Sequelize.TEXT,
+        allowNull: true,
       },
       createdAt: {
         allowNull: false,

@@ -244,13 +244,12 @@ Authorization: Bearer <token>
   "message": "Note created successfully",
   "note": {
     "id": 2,
-    "userId": 12,
+    "userId": 2,
     "highlightedText": "async/await",
     "explanation": "JavaScript feature for handling asynchronous operations",
     "originalContext": "JavaScript programming tutorial",
-    "createdAt": "2025-07-22T08:50:30.932Z",
-    "updatedAt": "2025-07-22T08:50:30.932Z",
-    "articleId": null
+    "createdAt": "2025-07-22T09:40:14.606Z",
+    "updatedAt": "2025-07-22T09:40:14.606Z"
   }
 }
 ```
@@ -269,13 +268,12 @@ Authorization: Bearer <token>
   "notes": [
     {
       "id": 2,
-      "userId": 12,
+      "userId": 2,
       "highlightedText": "async/await",
       "explanation": "JavaScript feature for handling asynchronous operations",
       "originalContext": "JavaScript programming tutorial",
-      "createdAt": "2025-07-22T08:50:30.932Z",
-      "updatedAt": "2025-07-22T08:50:30.932Z",
-      "articleId": null
+      "createdAt": "2025-07-22T09:40:14.606Z",
+      "updatedAt": "2025-07-22T09:40:14.606Z"
     }
   ],
   "total": 1,
@@ -290,13 +288,12 @@ Authorization: Bearer <token>
 {
   "note": {
     "id": 2,
-    "userId": 12,
+    "userId": 2,
     "highlightedText": "async/await",
     "explanation": "JavaScript feature for handling asynchronous operations",
     "originalContext": "JavaScript programming tutorial",
-    "createdAt": "2025-07-22T08:50:30.932Z",
-    "updatedAt": "2025-07-22T08:50:30.932Z",
-    "articleId": null
+    "createdAt": "2025-07-22T09:40:14.606Z",
+    "updatedAt": "2025-07-22T09:40:14.606Z"
   }
 }
 ```
@@ -325,13 +322,12 @@ Authorization: Bearer <token>
   "message": "Note updated successfully",
   "note": {
     "id": 2,
-    "userId": 12,
+    "userId": 2,
     "highlightedText": "updated async/await",
     "explanation": "Updated explanation for async/await in JavaScript",
     "originalContext": "updated JavaScript tutorial context",
-    "createdAt": "2025-07-22T08:50:30.932Z",
-    "updatedAt": "2025-07-22T08:53:55.332Z",
-    "articleId": null
+    "createdAt": "2025-07-22T09:40:14.606Z",
+    "updatedAt": "2025-07-22T09:40:29.601Z"
   }
 }
 ```
@@ -357,11 +353,6 @@ Authorization: Bearer <JWT_TOKEN>
 ---
 
 ## **📝 IMPORTANT NOTES**
-
-### **Legacy Fields:**
-
-- Field `articleId` in Note responses is a legacy field from previous version and will always be `null`
-- This field will be removed in future database migration
 
 ### **Error Examples:**
 
