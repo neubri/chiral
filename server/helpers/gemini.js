@@ -28,6 +28,18 @@ class GeminiHelper {
       return response.text();
     } catch (error) {
       console.error("Gemini API Error:", error);
+
+      // More specific error handling
+      if (error.status === 429) {
+        throw new Error("Rate limit exceeded. Please try again later.");
+      }
+      if (error.status === 503) {
+        throw new Error("Gemini AI service is temporarily unavailable");
+      }
+      if (error.message?.includes("API key")) {
+        throw new Error("AI service configuration error");
+      }
+
       throw new Error("Failed to generate explanation");
     }
   }

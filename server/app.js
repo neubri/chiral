@@ -16,27 +16,21 @@ const app = express();
 
 // Global middlewares
 app.use(cors());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+app.use(express.json({ limit: "10mb" }));
 
 //router
 const router = express.Router();
 
-// ========================================
-// PUBLIC ROUTES (No Authentication)
-// ========================================
+// PUBLIC ROUTES
 router.get("/health", pubController.getHealthCheck);
 router.get("/articles", pubController.getPublicArticles);
 
-// ========================================
 // AUTHENTICATION ROUTES
-// ========================================
 router.post("/auth/register", authController.register);
 router.post("/auth/login", authController.login);
 
-// ========================================
 // PROTECTED ROUTES (Require Authentication)
-// ========================================
 router.use(authentication.authenticateToken);
 
 // User Profile Management

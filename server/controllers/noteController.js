@@ -17,6 +17,7 @@ class NoteController {
     try {
       const { highlightedText, explanation, originalContext } = req.body;
 
+      // Enhanced input validation
       if (!highlightedText) {
         throw { name: "Bad Request", message: "Highlighted text is required" };
       }
@@ -25,11 +26,40 @@ class NoteController {
         throw { name: "Bad Request", message: "Explanation is required" };
       }
 
+      // Length validation to prevent abuse
+      if (highlightedText.length > 5000) {
+        throw {
+          name: "Bad Request",
+          message: "Highlighted text is too long (max 5000 characters)",
+        };
+      }
+
+      if (explanation.length > 10000) {
+        throw {
+          name: "Bad Request",
+          message: "Explanation is too long (max 10000 characters)",
+        };
+      }
+
+      if (originalContext && originalContext.length > 10000) {
+        throw {
+          name: "Bad Request",
+          message: "Original context is too long (max 10000 characters)",
+        };
+      }
+
+      // Trim whitespace
+      const sanitizedHighlightedText = highlightedText.trim();
+      const sanitizedExplanation = explanation.trim();
+      const sanitizedOriginalContext = originalContext
+        ? originalContext.trim()
+        : null;
+
       const note = await Note.create({
         userId: req.user.id,
-        highlightedText,
-        explanation,
-        originalContext: originalContext || null,
+        highlightedText: sanitizedHighlightedText,
+        explanation: sanitizedExplanation,
+        originalContext: sanitizedOriginalContext,
       });
 
       res.status(201).json({

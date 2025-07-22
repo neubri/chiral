@@ -584,3 +584,64 @@ async function handleTextHighlight(selectedText, context) {
 ✅ **Scalable** - Core features as foundation
 
 **The simplified Chiral-Dev focuses on what matters most: helping users understand complex text with AI and manage their learning notes efficiently.**
+
+---
+
+## **🔒 SECURITY & VALIDATION**
+
+### **Input Validation:**
+
+- Maximum text length limits (5,000 chars for highlighted text, 10,000 for explanation/context)
+- Input sanitization and trimming
+- Required field validation
+
+### **Error Handling:**
+
+- Comprehensive error types and status codes
+- Development vs production error messaging
+- Gemini API specific error handling (rate limits, service unavailable)
+
+### **Security Features:**
+
+- JWT token validation
+- Password hashing with bcrypt
+- Request size limits (10MB)
+- Environment variable validation on startup
+
+### **Common Error Responses:**
+
+```json
+// Validation Error
+{
+  "message": "Highlighted text is too long (max 5000 characters)"
+}
+
+// Authentication Error
+{
+  "message": "Access token required"
+}
+
+// Service Error
+{
+  "message": "AI service is temporarily unavailable"
+}
+```
+
+---
+
+## **📊 CHANGELOG (v1.1)**
+
+### **🆕 Recent Improvements:**
+
+- Enhanced input validation and length limits
+- Better error handling for AI service failures
+- Request size limits for security
+- Environment variable validation
+- Improved logging for development debugging
+- Rate limit handling for Gemini API
+
+### **🐛 Bug Fixes:**
+
+- Fixed hardcoded API URLs to use environment variables
+- Improved error messages consistency
+- Enhanced input sanitization

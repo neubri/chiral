@@ -13,7 +13,8 @@ class PubController {
     try {
       const { tag = "programming", per_page = 10 } = req.query;
 
-      const response = await axios.get("https://dev.to/api/articles", {
+      const baseUrl = process.env.DEV_TO_API_URL || "https://dev.to/api";
+      const response = await axios.get(`${baseUrl}/articles`, {
         params: {
           tag: tag.toLowerCase(),
           per_page: Math.min(per_page, 20),
