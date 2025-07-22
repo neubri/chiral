@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "hashed_password_here",
+    "learningInterests": ["javascript", "react", "nodejs"],
+    "profilePicture": null,
+    "googleId": null,
+    "createdAt": "2025-01-15T10:00:00Z",
+    "updatedAt": "2025-01-15T10:00:00Z"
+  },
+  {
+    "id": 2,
+    "name": "Jane Smith",
+    "email": "jane@example.com",
+    "password": "hashed_password_here",
+    "learningInterests": ["python", "machine-learning", "data-science"],
+    "profilePicture": "https://example.com/avatar.jpg",
+    "googleId": "google_id_here",
+    "createdAt": "2025-01-16T10:00:00Z",
+    "updatedAt": "2025-01-16T10:00:00Z"
+  }
+]

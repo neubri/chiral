@@ -1,21 +1,31 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "bin/www",
   "scripts": {
-    "dev": "npx nodemon index.js/app.js",
-    "test": "jest --detectOpenHandles --verbose --forceExit --runInBand --coverage"
+    "dev": "npx nodemon bin/www",
+    "start": "node bin/www",
+    "test": "jest --detectOpenHandles --verbose --forceExit --runInBand --coverage",
+    "db:migrate": "npx sequelize-cli db:migrate",
+    "db:seed": "npx sequelize-cli db:seed:all",
+    "db:reset": "npx sequelize-cli db:drop && npx sequelize-cli db:create && npx sequelize-cli db:migrate"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "axios": "^1.10.0",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
-    "express": "^5.1.0",
+    "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
+    "marked": "^16.1.1",
+    "multer": "^1.4.5-lts.1",
+    "path-to-regexp": "^6.2.1",
+    "pdf-lib": "^1.17.1",
     "pg": "^8.16.3",
     "sequelize": "^6.37.7"
   },

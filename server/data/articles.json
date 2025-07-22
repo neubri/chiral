@@ -1,0 +1,28 @@
+[
+  {
+    "id": 1,
+    "userId": 1,
+    "title": "Introduction to React Hooks",
+    "url": "https://dev.to/example/intro-react-hooks",
+    "content": "React Hooks are a new addition in React 16.8...",
+    "author": "React Developer",
+    "publishedAt": "2025-01-15T08:00:00Z",
+    "tags": "react,javascript,hooks",
+    "devToId": 12345,
+    "createdAt": "2025-01-15T10:00:00Z",
+    "updatedAt": "2025-01-15T10:00:00Z"
+  },
+  {
+    "id": 2,
+    "userId": 2,
+    "title": "Python Machine Learning Basics",
+    "url": "https://dev.to/example/python-ml-basics",
+    "content": "Machine learning with Python is easier than you think...",
+    "author": "ML Expert",
+    "publishedAt": "2025-01-16T09:00:00Z",
+    "tags": "python,machine-learning,beginner",
+    "devToId": 12346,
+    "createdAt": "2025-01-16T10:00:00Z",
+    "updatedAt": "2025-01-16T10:00:00Z"
+  }
+]
