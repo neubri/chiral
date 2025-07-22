@@ -19,11 +19,22 @@ class AuthController {
         throw { name: "Bad Request", message: "Password is required" };
       }
 
+      // Handle learningInterests properly - convert string to array if needed
+      let processedLearningInterests = [];
+      if (learningInterests) {
+        if (Array.isArray(learningInterests)) {
+          processedLearningInterests = learningInterests;
+        } else if (typeof learningInterests === "string") {
+          // If it's a string, convert to array
+          processedLearningInterests = [learningInterests];
+        }
+      }
+
       const user = await User.create({
         name,
         email,
         password,
-        learningInterests: learningInterests || [],
+        learningInterests: processedLearningInterests,
       });
 
       const cleanUser = user.toJSON();
@@ -87,12 +98,23 @@ class AuthController {
     try {
       const { learningInterests } = req.body;
 
+      // Handle learningInterests properly - convert string to array if needed
+      let processedLearningInterests = [];
+      if (learningInterests) {
+        if (Array.isArray(learningInterests)) {
+          processedLearningInterests = learningInterests;
+        } else if (typeof learningInterests === "string") {
+          // If it's a string, convert to array
+          processedLearningInterests = [learningInterests];
+        }
+      }
+
       const user = await User.findByPk(req.user.id);
       if (!user) {
         throw { name: "Not Found", message: "User not found" };
       }
 
-      user.learningInterests = learningInterests;
+      user.learningInterests = processedLearningInterests;
       await user.save();
 
       res.json({
@@ -115,25 +137,6 @@ class AuthController {
       }
 
       res.json({ user });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  static async googleLogin(req, res, next) {
-    try {
-      const { token } = req.body;
-
-      if (!token) {
-        throw { name: "Bad Request", message: "Google token is required" };
-      }
-
-      // TODO: Implement Google OAuth verification
-      // For now, return a placeholder response
-      res.status(501).json({
-        message: "Google OAuth integration coming soon",
-        token,
-      });
     } catch (error) {
       next(error);
     }

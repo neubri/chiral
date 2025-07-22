@@ -3,25 +3,24 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 class GeminiHelper {
   constructor() {
     this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    this.model = this.genAI.getGenerativeModel({ model: "gemini-pro" });
+    this.model = this.genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
   }
 
   async explainText(highlightedText, context = null) {
     try {
       const prompt = `
-        Jelaskan kata atau kalimat berikut dengan bahasa yang sangat sederhana seperti menjelaskan kepada anak usia 13 tahun.
-        Gunakan analogi dan contoh yang mudah dipahami. Jangan gunakan jargon teknis yang rumit.
-
-        Kata/Kalimat yang perlu dijelaskan: "${highlightedText}"
-
+        Jelaskan kata/kalimat "${highlightedText}" dengan sangat sederhana dan ringkas.
         ${context ? `Konteks: "${context}"` : ""}
 
-        Berikan penjelasan yang:
-        1. Mudah dipahami
-        2. Menggunakan analogi sederhana
-        3. Memberikan contoh praktis
-        4. Maksimal 3 paragraf
-        5. Dalam bahasa Indonesia
+        ATURAN PENTING:
+        - MAKSIMAL 1-2 paragraf pendek
+        - Gunakan analogi sederhana yang relatable
+        - Fokus HANYA pada makna inti dari kata/kalimat tersebut
+        - Bahasa Indonesia yang mudah dipahami anak SMP
+        - Langsung to the point, jangan bertele-tele
+        - Berikan 1 contoh konkret yang familiar
+
+        Jawab dengan format: "Definisi singkat + analogi sederhana + contoh konkret"
       `;
 
       const result = await this.model.generateContent(prompt);
@@ -36,25 +35,30 @@ class GeminiHelper {
   async generateLearningPath(topic, currentLevel = "pemula") {
     try {
       const prompt = `
-        Berikan saran pembelajaran untuk topik "${topic}" dengan level ${currentLevel}.
+        Buat rencana belajar untuk topik "${topic}" level ${currentLevel}.
 
-        Berikan dalam format JSON dengan struktur:
+        ATURAN:
+        - Maksimal 4 langkah pembelajaran
+        - Setiap langkah ringkas dan actionable
+        - Estimasi waktu realistis
+        - Sumber belajar yang mudah diakses
+
+        Format JSON:
         {
           "learningPath": [
             {
               "step": 1,
-              "title": "Judul langkah",
-              "description": "Deskripsi apa yang harus dipelajari",
-              "resources": ["sumber belajar 1", "sumber belajar 2"]
+              "title": "Judul singkat",
+              "description": "Deskripsi singkat (1-2 kalimat)",
+              "resources": ["sumber 1", "sumber 2"]
             }
           ],
-          "keyTopics": ["topik kunci 1", "topik kunci 2"],
-          "estimatedTime": "estimasi waktu belajar",
+          "keyTopics": ["maksimal 4 topik kunci"],
+          "estimatedTime": "estimasi total waktu",
           "prerequisites": ["prasyarat jika ada"]
         }
 
-        Berikan maksimal 5 langkah pembelajaran yang terstruktur dan mudah diikuti.
-        Gunakan bahasa Indonesia.
+        Gunakan bahasa Indonesia dan fokus pada hal-hal esensial saja.
       `;
 
       const result = await this.model.generateContent(prompt);
@@ -79,23 +83,29 @@ class GeminiHelper {
   async generateQuiz(content, difficulty = "easy") {
     try {
       const prompt = `
-        Berdasarkan konten berikut, buat 5 soal pilihan ganda dengan tingkat kesulitan ${difficulty}.
+        Buat 3 soal pilihan ganda berdasarkan konten ini dengan tingkat ${difficulty}.
 
-        Konten: "${content.substring(0, 1000)}..."
+        Konten: "${content.substring(0, 800)}..."
+
+        ATURAN:
+        - Hanya 3 soal saja (jangan overwhelm user)
+        - Pertanyaan singkat dan jelas
+        - Penjelasan jawaban maksimal 1 kalimat
+        - Fokus pada poin-poin penting dari konten
 
         Format JSON:
         {
           "questions": [
             {
-              "question": "Pertanyaan",
+              "question": "Pertanyaan singkat?",
               "options": ["A. Pilihan 1", "B. Pilihan 2", "C. Pilihan 3", "D. Pilihan 4"],
               "correctAnswer": "A",
-              "explanation": "Penjelasan kenapa jawaban ini benar"
+              "explanation": "Penjelasan singkat (1 kalimat)"
             }
           ]
         }
 
-        Gunakan bahasa Indonesia dan pastikan soal relevan dengan konten.
+        Gunakan bahasa Indonesia.
       `;
 
       const result = await this.model.generateContent(prompt);
@@ -120,24 +130,24 @@ class GeminiHelper {
   async summarizeContent(content, length = "medium") {
     try {
       const lengthMap = {
-        short: "1 paragraf",
-        medium: "2-3 paragraf",
-        long: "4-5 paragraf",
+        short: "1 paragraf pendek",
+        medium: "1-2 paragraf",
+        long: "2-3 paragraf",
       };
 
       const prompt = `
-        Buatlah ringkasan dari artikel berikut dalam ${
-          lengthMap[length] || "2-3 paragraf"
-        }.
+        Buat ringkasan artikel ini dalam ${lengthMap[length] || "1-2 paragraf"}.
 
         Artikel: "${content}"
 
-        Ringkasan harus:
-        1. Mencakup poin-poin utama
-        2. Mudah dipahami
-        3. Menggunakan bahasa sederhana
-        4. Dalam bahasa Indonesia
-        5. Menyertakan insight atau pembelajaran penting
+        ATURAN:
+        - Fokus pada poin utama saja
+        - Bahasa sederhana dan jelas
+        - Langsung to the point
+        - Sertakan 1-2 insight penting
+        - Jangan terlalu detail, cukup inti sari
+
+        Gunakan bahasa Indonesia yang mudah dipahami.
       `;
 
       const result = await this.model.generateContent(prompt);

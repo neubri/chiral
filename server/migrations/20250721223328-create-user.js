@@ -25,6 +25,13 @@ module.exports = {
       googleId: {
         type: Sequelize.STRING,
       },
+      learningInterests: {
+        type: Sequelize.ARRAY(Sequelize.STRING),
+        defaultValue: [],
+      },
+      profilePicture: {
+        type: Sequelize.STRING,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

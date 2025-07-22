@@ -11,8 +11,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      User.hasMany(models.Note, { foreignKey: "userId" });
-      User.hasMany(models.Article, { foreignKey: "userId" });
+      User.hasMany(models.Note, {
+        foreignKey: "userId",
+        as: "notes",
+        onDelete: "CASCADE",
+      });
+      User.hasMany(models.Article, {
+        foreignKey: "userId",
+        as: "articles",
+        onDelete: "CASCADE",
+      });
     }
   }
   User.init(
@@ -53,8 +61,9 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: {
             msg: "Password is required",
           },
-          notEmpty: {
-            msg: "Password is required",
+          len: {
+            args: [6, 255],
+            msg: "Password must be at least 6 characters long",
           },
         },
       },

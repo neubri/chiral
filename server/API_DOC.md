@@ -1,74 +1,44 @@
-# Chiral Learning API Documentation
+# Chiral-Dev API Documentation (Simplified Core Features)
 
-## Base URL
+## 🎯 **CORE FEATURES OVERVIEW**
 
-```
-http://localhost:3000
-```
+Chiral-Dev telah disederhanakan menjadi **MVP (Minimum Viable Product)** yang fokus pada fitur utama:
 
-## Overview
-
-Chiral Learning API adalah backend service untuk platform pembelajaran yang mengintegrasikan artikel dari Dev.to, AI features menggunakan Gemini AI, dan sistem note-taking personal. API ini menggunakan JWT untuk authentication dan menyediakan public endpoints untuk akses tanpa autentikasi.
-
----
-
-## Authentication
-
-API menggunakan JWT (JSON Web Token) untuk authentication. Token harus disertakan dalam header `Authorization` dengan format `Bearer <token>`.
+### **Arsitektur Sederhana:**
 
 ```
-Authorization: Bearer <your_jwt_token>
+Client (React/Vite) ↔ API Server (Express) ↔ Database (PostgreSQL)
+                             ↕
+                        GeminiAI API
 ```
 
 ---
 
-## Public Endpoints
+## **📋 API ENDPOINTS**
 
-### 1. Health Check
+### **🔓 PUBLIC ENDPOINTS**
 
-#### GET /
+#### **1. Health Check**
 
-Get server health status (root endpoint)
+```http
+GET /
+GET /api/health
+```
 
 **Response:**
 
 ```json
 {
   "message": "Chiral server is running!",
-  "timestamp": "2025-07-22T00:43:45.062Z",
+  "timestamp": "2025-07-22T08:39:12.086Z",
   "version": "1.0.0"
 }
 ```
 
-#### GET /api/health
+#### **2. Public Articles**
 
-Get server health status (API endpoint)
-
-**Response:**
-
-```json
-{
-  "message": "Chiral server is running!",
-  "timestamp": "2025-07-22T00:43:45.062Z",
-  "version": "1.0.0"
-}
-```
-
-### 2. Public Articles
-
-#### GET /api/articles
-
-Get public articles from Dev.to
-
-**Query Parameters:**
-
-- `tag` (string, optional): Filter by tag (default: "programming")
-- `per_page` (number, optional): Number of articles (max: 20, default: 10)
-
-**Example Request:**
-
-```
-GET /api/articles?tag=javascript&per_page=5
+```http
+GET /api/articles?tag=react&per_page=2
 ```
 
 **Response:**
@@ -78,553 +48,295 @@ GET /api/articles?tag=javascript&per_page=5
   "articles": [
     {
       "type_of": "article",
-      "id": 2690431,
-      "title": "Introducing Kiro – An AI IDE That Thinks Like a Developer",
-      "description": "👋 Hey there, tech enthusiasts!...",
-      "readable_publish_date": "Jul 15",
-      "slug": "introducing-kiro-an-ai-ide-that-thinks-like-a-developer-42jp",
-      "url": "https://dev.to/aws-builders/introducing-kiro-an-ai-ide-that-thinks-like-a-developer-42jp",
-      "comments_count": 6,
-      "public_reactions_count": 205,
-      "published_timestamp": "2025-07-15T13:08:43Z",
-      "tag_list": ["aws", "kiro", "programming", "ai"],
+      "id": 2636769,
+      "title": "Thesys React SDK: Turn LLM Responses into real time User Interfaces",
+      "description": "LLMs are becoming the backbone of modern dev tools and AI agents. It can already generate code. But...",
+      "readable_publish_date": "Jul 17",
+      "slug": "thesys-react-sdk-turn-llm-responses-into-real-time-user-interfaces-30d5",
+      "url": "https://dev.to/anmolbaranwal/thesys-react-sdk-turn-llm-responses-into-real-time-user-interfaces-30d5",
+      "comments_count": 9,
+      "public_reactions_count": 140,
+      "reading_time_minutes": 14,
+      "tag_list": ["react", "ai", "programming", "javascript"],
       "user": {
-        "name": "Sarvar Nadaf",
-        "username": "sarvar_04",
-        "profile_image": "https://...",
-        "profile_image_90": "https://..."
+        "name": "Anmol Baranwal",
+        "username": "anmolbaranwal",
+        "profile_image": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F950976%2F69363f37-b7c5-4f1e-a2fe-29b4e4e33e92.png",
+        "profile_image_90": "https://media2.dev.to/dynamic/image/width=90,height=90,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F950976%2F69363f37-b7c5-4f1e-a2fe-29b4e4e33e92.png"
       }
     }
   ],
-  "total": 10
+  "total": 1
 }
 ```
 
-### 3. Public Tags
+---
 
-#### GET /api/tags
+### **🔐 AUTHENTICATION**
 
-Get popular tags from Dev.to
+#### **3. Register**
+
+```http
+POST /api/auth/register
+```
+
+**Request:**
+
+```json
+{
+  "name": "Test User API",
+  "email": "testapi@example.com",
+  "password": "password123",
+  "learningInterests": ["React", "Node.js"] // optional
+}
+```
 
 **Response:**
 
 ```json
 {
-  "tags": [
-    {
-      "id": 1,
-      "name": "javascript",
-      "bg_color_hex": "#f7df1e",
-      "text_color_hex": "#000000"
-    }
-  ],
-  "total": 50
-}
-```
-
----
-
-## Authentication Endpoints
-
-### 1. User Registration
-
-#### POST /api/auth/register
-
-Register new user
-
-**Request Body:**
-
-```json
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "securepassword123",
-  "learningInterests": ["javascript", "react", "nodejs"]
-}
-```
-
-**Response (201):**
-
-```json
-{
   "message": "User registered successfully",
   "user": {
-    "id": 1,
-    "name": "John Doe",
-    "email": "john@example.com",
+    "id": 12,
+    "name": "Test User API",
+    "email": "testapi@example.com",
+    "learningInterests": ["React", "Node.js"],
+    "updatedAt": "2025-07-22T08:48:33.178Z",
+    "createdAt": "2025-07-22T08:48:33.178Z",
     "googleId": null,
-    "learningInterests": ["javascript", "react", "nodejs"],
     "profilePicture": null
   }
 }
 ```
 
-**Error Response (400):**
+#### **4. Login**
+
+```http
+POST /api/auth/login
+```
+
+**Request:**
 
 ```json
 {
-  "message": "Name is required"
+  "email": "testapi@example.com",
+  "password": "password123"
 }
 ```
 
-### 2. User Login
-
-#### POST /api/auth/login
-
-Login user
-
-**Request Body:**
-
-```json
-{
-  "email": "john@example.com",
-  "password": "securepassword123"
-}
-```
-
-**Response (200):**
+**Response:**
 
 ```json
 {
   "message": "Login successful",
-  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIsImlhdCI6MTc1MzE3NDE0OH0.uA5NWspUjZVUO1-OT10tHTPLNdSMdCHJOBcl5eqP3BE",
   "user": {
-    "id": 1,
-    "name": "John Doe",
-    "email": "john@example.com",
+    "id": 12,
+    "name": "Test User API",
+    "email": "testapi@example.com",
     "googleId": null,
-    "learningInterests": ["javascript", "react", "nodejs"],
+    "learningInterests": ["React", "Node.js"],
     "profilePicture": null
   }
 }
 ```
 
-**Error Response (401):**
-
-```json
-{
-  "message": "Invalid email/password"
-}
-```
-
-### 3. Google OAuth Login
-
-#### POST /api/auth/google
-
-Login with Google OAuth (Coming Soon)
-
-**Request Body:**
-
-```json
-{
-  "token": "google_oauth_token_here"
-}
-```
-
-**Response (501):**
-
-```json
-{
-  "message": "Google OAuth integration coming soon",
-  "token": "google_oauth_token_here"
-}
-```
-
 ---
 
-## Protected Endpoints
+### **👤 USER PROFILE**
 
-> **Note:** All endpoints below require authentication. Include JWT token in Authorization header.
-
-### User Profile
-
-#### PUT /api/auth/interests
-
-Update user learning interests
-
-**Request Body:**
+**Response:**
 
 ```json
 {
-  "learningInterests": ["python", "machine-learning", "data-science"]
+  "user": {
+    "id": 12,
+    "name": "Test User API",
+    "email": "testapi@example.com",
+    "googleId": null,
+    "learningInterests": ["React", "Node.js"],
+    "profilePicture": null,
+    "createdAt": "2025-07-22T08:48:33.178Z",
+    "updatedAt": "2025-07-22T08:48:33.178Z"
+  }
 }
 ```
 
-**Response (200):**
+#### **6. Update Learning Interests**
+
+```http
+PUT /api/auth/interests
+Authorization: Bearer <token>
+```
+
+**Request:**
+
+```json
+{
+  "learningInterests": ["Vue.js", "TypeScript", "GraphQL"]
+}
+```
+
+**Response:**
 
 ```json
 {
   "message": "Learning interests updated successfully",
-  "user": {
-    "id": 1,
-    "name": "John Doe",
-    "email": "john@example.com",
-    "learningInterests": ["python", "machine-learning", "data-science"]
-  }
-}
-```
-
-#### GET /api/auth/profile
-
-Get user profile
-
-**Response (200):**
-
-```json
-{
-  "user": {
-    "id": 1,
-    "name": "John Doe",
-    "email": "john@example.com",
-    "googleId": null,
-    "learningInterests": ["python", "machine-learning", "data-science"],
-    "profilePicture": null
-  }
+  "learningInterests": ["Vue.js", "TypeScript", "GraphQL"]
 }
 ```
 
 ---
 
-## Articles Endpoints
+### **🤖 AI EXPLAIN (CORE FEATURE)**
 
-### 1. Get Recommendations
+#### **7. Explain Text with AI**
 
-#### GET /api/articles/recommendations
+```http
+POST /api/gemini/explain
+Authorization: Bearer <token>
+```
 
-Get personalized article recommendations based on user interests
-
-**Response (200):**
+**Request:**
 
 ```json
 {
-  "recommendations": [
-    {
-      "id": 2690431,
-      "title": "Introducing Kiro – An AI IDE",
-      "description": "AI IDE development...",
-      "url": "https://dev.to/...",
-      "tags": ["ai", "ide", "programming"],
-      "relevanceScore": 0.95
-    }
-  ]
+  "highlightedText": "async/await",
+  "context": "JavaScript programming" // optional
 }
 ```
 
-### 2. Search Articles
-
-#### GET /api/articles/search
-
-Search articles with query
-
-**Query Parameters:**
-
-- `q` (string, required): Search query
-- `tag` (string, optional): Filter by tag
-- `per_page` (number, optional): Results per page (max: 20)
-
-**Example Request:**
-
-```
-GET /api/articles/search?q=react hooks&tag=react&per_page=10
-```
-
-**Response (200):**
+**Response:**
 
 ```json
 {
-  "articles": [
-    {
-      "id": 123456,
-      "title": "Understanding React Hooks",
-      "description": "Deep dive into React Hooks...",
-      "url": "https://dev.to/...",
-      "tags": ["react", "hooks", "javascript"]
-    }
-  ],
-  "total": 25,
-  "query": "react hooks"
-}
-```
-
-### 3. Get Dev.to Article
-
-#### GET /api/articles/devto/:id
-
-Get specific article from Dev.to by ID
-
-**Parameters:**
-
-- `id` (number): Dev.to article ID
-
-**Response (200):**
-
-```json
-{
-  "article": {
-    "id": 123456,
-    "title": "Understanding React Hooks",
-    "body_markdown": "# React Hooks\n\nReact Hooks are...",
-    "description": "Deep dive into React Hooks...",
-    "url": "https://dev.to/...",
-    "tags": ["react", "hooks", "javascript"],
-    "user": {
-      "name": "Jane Developer",
-      "username": "jane_dev"
-    }
-  }
-}
-```
-
-### 4. Save Article
-
-#### POST /api/articles/save
-
-Save article to user's collection
-
-**Request Body:**
-
-```json
-{
-  "devToId": 123456,
-  "title": "Understanding React Hooks",
-  "description": "Deep dive into React Hooks...",
-  "url": "https://dev.to/...",
-  "tags": ["react", "hooks", "javascript"],
-  "author": "Jane Developer"
-}
-```
-
-**Response (201):**
-
-```json
-{
-  "message": "Article saved successfully",
-  "article": {
-    "id": 1,
-    "devToId": 123456,
-    "title": "Understanding React Hooks",
-    "description": "Deep dive into React Hooks...",
-    "url": "https://dev.to/...",
-    "tags": ["react", "hooks", "javascript"],
-    "author": "Jane Developer",
-    "userId": 1,
-    "createdAt": "2025-07-22T01:00:00.000Z"
-  }
-}
-```
-
-### 5. Get Saved Articles
-
-#### GET /api/articles/saved
-
-Get user's saved articles
-
-**Query Parameters:**
-
-- `page` (number, optional): Page number (default: 1)
-- `limit` (number, optional): Items per page (default: 10, max: 50)
-
-**Response (200):**
-
-```json
-{
-  "articles": [
-    {
-      "id": 1,
-      "devToId": 123456,
-      "title": "Understanding React Hooks",
-      "description": "Deep dive into React Hooks...",
-      "url": "https://dev.to/...",
-      "tags": ["react", "hooks", "javascript"],
-      "author": "Jane Developer",
-      "createdAt": "2025-07-22T01:00:00.000Z"
-    }
-  ],
-  "pagination": {
-    "page": 1,
-    "limit": 10,
-    "total": 25,
-    "totalPages": 3
-  }
-}
-```
-
-### 6. Delete Saved Article
-
-#### DELETE /api/articles/saved/:id
-
-Delete saved article from user's collection
-
-**Parameters:**
-
-- `id` (number): Saved article ID
-
-**Response (200):**
-
-```json
-{
-  "message": "Article removed from saved collection"
+  "highlightedText": "async/await",
+  "explanation": "\"Async/await\" adalah fitur di JavaScript untuk menjalankan tugas yang butuh waktu lama (misalnya, mengambil data dari internet) tanpa membuat seluruh program jadi \"macet\" atau berhenti merespons. Singkatnya, `async` menandai fungsi yang akan melakukan pekerjaan \"tunda\", dan `await` membuat program *menunggu* pekerjaan tunda itu selesai sebelum melanjutkan ke perintah berikutnya, namun tetap membiarkan bagian lain dari program berfungsi normal.",
+  "context": "JavaScript programming"
 }
 ```
 
 ---
 
-## Notes Endpoints
+### **📝 NOTES MANAGEMENT (CORE FEATURE)**
 
-### 1. Create Note
+#### **8. Create Note**
 
-#### POST /api/notes
+```http
+POST /api/notes
+Authorization: Bearer <token>
+```
 
-Create new note
-
-**Request Body:**
+**Request:**
 
 ```json
 {
-  "title": "React Hooks Summary",
-  "content": "## React Hooks\n\n- useState\n- useEffect\n- useContext",
-  "tags": ["react", "hooks", "summary"],
-  "isPublic": false
+  "highlightedText": "async/await",
+  "explanation": "JavaScript feature for handling asynchronous operations",
+  "originalContext": "JavaScript programming tutorial" // optional
 }
 ```
 
-**Response (201):**
+**Response:**
 
 ```json
 {
   "message": "Note created successfully",
   "note": {
-    "id": 1,
-    "title": "React Hooks Summary",
-    "content": "## React Hooks\n\n- useState\n- useEffect\n- useContext",
-    "tags": ["react", "hooks", "summary"],
-    "isPublic": false,
-    "userId": 1,
-    "createdAt": "2025-07-22T01:00:00.000Z",
-    "updatedAt": "2025-07-22T01:00:00.000Z"
+    "id": 2,
+    "userId": 12,
+    "highlightedText": "async/await",
+    "explanation": "JavaScript feature for handling asynchronous operations",
+    "originalContext": "JavaScript programming tutorial",
+    "createdAt": "2025-07-22T08:50:30.932Z",
+    "updatedAt": "2025-07-22T08:50:30.932Z",
+    "articleId": null
   }
 }
 ```
 
-### 2. Get Notes
+#### **9. Get Notes**
 
-#### GET /api/notes
-
-Get user's notes
-
-**Query Parameters:**
-
-- `page` (number, optional): Page number (default: 1)
-- `limit` (number, optional): Items per page (default: 10, max: 50)
-- `search` (string, optional): Search in title and content
-- `tag` (string, optional): Filter by tag
-
-**Example Request:**
-
-```
-GET /api/notes?page=1&limit=10&search=react&tag=summary
+```http
+GET /api/notes?page=1&limit=20
+Authorization: Bearer <token>
 ```
 
-**Response (200):**
+**Response:**
 
 ```json
 {
   "notes": [
     {
-      "id": 1,
-      "title": "React Hooks Summary",
-      "content": "## React Hooks\n\n- useState\n- useEffect\n- useContext",
-      "tags": ["react", "hooks", "summary"],
-      "isPublic": false,
-      "createdAt": "2025-07-22T01:00:00.000Z",
-      "updatedAt": "2025-07-22T01:00:00.000Z"
+      "id": 2,
+      "userId": 12,
+      "highlightedText": "async/await",
+      "explanation": "JavaScript feature for handling asynchronous operations",
+      "originalContext": "JavaScript programming tutorial",
+      "createdAt": "2025-07-22T08:50:30.932Z",
+      "updatedAt": "2025-07-22T08:50:30.932Z",
+      "articleId": null
     }
   ],
-  "pagination": {
-    "page": 1,
-    "limit": 10,
-    "total": 15,
-    "totalPages": 2
-  }
+  "total": 1,
+  "currentPage": 1,
+  "totalPages": 1
 }
 ```
 
-### 3. Get Note by ID
-
-#### GET /api/notes/:id
-
-Get specific note by ID
-
-**Parameters:**
-
-- `id` (number): Note ID
-
-**Response (200):**
+**Response:**
 
 ```json
 {
   "note": {
-    "id": 1,
-    "title": "React Hooks Summary",
-    "content": "## React Hooks\n\n- useState\n- useEffect\n- useContext",
-    "tags": ["react", "hooks", "summary"],
-    "isPublic": false,
-    "userId": 1,
-    "createdAt": "2025-07-22T01:00:00.000Z",
-    "updatedAt": "2025-07-22T01:00:00.000Z"
+    "id": 2,
+    "userId": 12,
+    "highlightedText": "async/await",
+    "explanation": "JavaScript feature for handling asynchronous operations",
+    "originalContext": "JavaScript programming tutorial",
+    "createdAt": "2025-07-22T08:50:30.932Z",
+    "updatedAt": "2025-07-22T08:50:30.932Z",
+    "articleId": null
   }
 }
 ```
 
-### 4. Update Note
+#### **11. Update Note**
 
-#### PUT /api/notes/:id
+```http
+PUT /api/notes/:id
+Authorization: Bearer <token>
+```
 
-Update existing note
-
-**Parameters:**
-
-- `id` (number): Note ID
-
-**Request Body:**
+**Request:**
 
 ```json
 {
-  "title": "React Hooks Complete Guide",
-  "content": "## React Hooks Complete Guide\n\n### Basic Hooks\n- useState\n- useEffect\n- useContext\n\n### Advanced Hooks\n- useReducer\n- useMemo\n- useCallback",
-  "tags": ["react", "hooks", "complete-guide"],
-  "isPublic": true
+  "highlightedText": "updated async/await",
+  "explanation": "Updated explanation for async/await in JavaScript",
+  "originalContext": "updated JavaScript tutorial context"
 }
 ```
 
-**Response (200):**
+**Response:**
 
 ```json
 {
   "message": "Note updated successfully",
   "note": {
-    "id": 1,
-    "title": "React Hooks Complete Guide",
-    "content": "## React Hooks Complete Guide\n\n### Basic Hooks\n- useState\n- useEffect\n- useContext\n\n### Advanced Hooks\n- useReducer\n- useMemo\n- useCallback",
-    "tags": ["react", "hooks", "complete-guide"],
-    "isPublic": true,
-    "userId": 1,
-    "updatedAt": "2025-07-22T02:00:00.000Z"
+    "id": 2,
+    "userId": 12,
+    "highlightedText": "updated async/await",
+    "explanation": "Updated explanation for async/await in JavaScript",
+    "originalContext": "updated JavaScript tutorial context",
+    "createdAt": "2025-07-22T08:50:30.932Z",
+    "updatedAt": "2025-07-22T08:53:55.332Z",
+    "articleId": null
   }
 }
 ```
 
-### 5. Delete Note
-
-#### DELETE /api/notes/:id
-
-Delete note
-
-**Parameters:**
-
-- `id` (number): Note ID
-
-**Response (200):**
+**Response:**
 
 ```json
 {
@@ -632,216 +344,32 @@ Delete note
 }
 ```
 
-### 6. Export Note to PDF
-
-#### GET /api/notes/export/pdf
-
-Export user's notes to PDF
-
-**Query Parameters:**
-
-- `noteIds` (string, optional): Comma-separated note IDs (if not provided, exports all notes)
-
-**Example Request:**
-
-```
-GET /api/notes/export/pdf?noteIds=1,2,3
-```
-
-**Response (200):**
-
-- Content-Type: `application/pdf`
-- PDF file download
-
-### 7. Get Note as Markdown
-
-#### GET /api/notes/:id/markdown
-
-Get note content as downloadable markdown file
-
-**Parameters:**
-
-- `id` (number): Note ID
-
-**Response (200):**
-
-- Content-Type: `text/markdown`
-- Markdown file download
-
 ---
 
-## Gemini AI Endpoints
+## **🔒 AUTHENTICATION**
 
-### 1. Explain Text
+Semua protected endpoints memerlukan header:
 
-#### POST /api/gemini/explain
-
-Get AI explanation of complex concepts
-
-**Request Body:**
-
-```json
-{
-  "text": "What are React Hooks and how do they work?",
-  "context": "I'm learning React and need a beginner-friendly explanation"
-}
 ```
-
-**Response (200):**
-
-```json
-{
-  "explanation": "React Hooks are functions that let you 'hook into' React state and lifecycle features from function components...",
-  "examples": ["useState for state management", "useEffect for side effects"],
-  "relatedTopics": ["React Components", "State Management", "Lifecycle Methods"]
-}
-```
-
-### 2. Generate Learning Path
-
-#### POST /api/gemini/suggestions
-
-Get personalized learning path suggestions
-
-**Request Body:**
-
-```json
-{
-  "topic": "Full Stack Web Development",
-  "currentLevel": "beginner",
-  "interests": ["javascript", "react", "nodejs"],
-  "timeframe": "3 months"
-}
-```
-
-**Response (200):**
-
-```json
-{
-  "learningPath": {
-    "title": "Full Stack Web Development - 3 Month Plan",
-    "totalWeeks": 12,
-    "phases": [
-      {
-        "phase": 1,
-        "title": "Frontend Fundamentals",
-        "weeks": "1-4",
-        "topics": ["HTML/CSS", "JavaScript ES6+", "DOM Manipulation"],
-        "resources": ["MDN Web Docs", "JavaScript.info"],
-        "projects": ["Personal Portfolio", "Interactive Calculator"]
-      }
-    ]
-  },
-  "nextSteps": ["Set up development environment", "Start with HTML/CSS basics"]
-}
-```
-
-### 3. Generate Quiz
-
-#### POST /api/gemini/quiz
-
-Generate quiz based on learning material
-
-**Request Body:**
-
-```json
-{
-  "topic": "React Hooks",
-  "difficulty": "intermediate",
-  "questionCount": 5,
-  "types": ["multiple-choice", "true-false"]
-}
-```
-
-**Response (200):**
-
-```json
-{
-  "quiz": {
-    "title": "React Hooks Quiz",
-    "topic": "React Hooks",
-    "difficulty": "intermediate",
-    "questions": [
-      {
-        "id": 1,
-        "type": "multiple-choice",
-        "question": "Which Hook is used for managing component state?",
-        "options": ["useEffect", "useState", "useContext", "useReducer"],
-        "correctAnswer": "useState",
-        "explanation": "useState is the Hook specifically designed for managing state in functional components."
-      }
-    ]
-  },
-  "estimatedTime": "10 minutes"
-}
-```
-
-### 4. Summarize Content
-
-#### POST /api/gemini/summarize
-
-Summarize long articles or notes
-
-**Request Body:**
-
-```json
-{
-  "content": "Very long article content here...",
-  "summaryType": "bullet-points",
-  "maxLength": 300
-}
-```
-
-**Response (200):**
-
-```json
-{
-  "summary": {
-    "type": "bullet-points",
-    "content": "• React Hooks allow functional components to use state\n• useState manages component state\n• useEffect handles side effects\n• Custom hooks enable code reuse",
-    "originalLength": 2500,
-    "summaryLength": 180,
-    "keyPoints": ["State management", "Side effects", "Code reuse"]
-  }
-}
+Authorization: Bearer <JWT_TOKEN>
 ```
 
 ---
 
-## Error Responses
+## **📝 IMPORTANT NOTES**
 
-### Standard Error Format
+### **Legacy Fields:**
 
-All error responses follow this format:
+- Field `articleId` in Note responses is a legacy field from previous version and will always be `null`
+- This field will be removed in future database migration
 
-```json
-{
-  "message": "Error description"
-}
-```
-
-### HTTP Status Codes
-
-- `200` - Success
-- `201` - Created
-- `400` - Bad Request (validation errors, missing required fields)
-- `401` - Unauthorized (invalid or missing authentication)
-- `403` - Forbidden (insufficient permissions)
-- `404` - Not Found (resource doesn't exist)
-- `500` - Internal Server Error
-- `501` - Not Implemented (feature coming soon)
-
-### Common Error Examples
-
-**400 Bad Request:**
+### **Error Examples:**
 
 ```json
 {
-  "message": "Email is required"
+  "message": "Highlighted text is required"
 }
 ```
-
-**401 Unauthorized:**
 
 ```json
 {
@@ -849,15 +377,17 @@ All error responses follow this format:
 }
 ```
 
-**401 Authentication Required:**
-
 ```json
 {
-  "message": "Access token is required"
+  "message": "Access token required"
 }
 ```
 
-**404 Not Found:**
+```json
+{
+  "message": "Invalid token"
+}
+```
 
 ```json
 {
@@ -865,62 +395,201 @@ All error responses follow this format:
 }
 ```
 
-**500 Internal Server Error:**
+---
+
+## **❌ ERROR RESPONSES**
 
 ```json
 {
-  "message": "Internal server error"
+  "message": "Error description"
+}
+```
+
+**Status Codes:**
+
+- `400` - Bad Request (validation errors)
+- `401` - Unauthorized (missing/invalid token)
+- `404` - Not Found
+- `500` - Internal Server Error
+
+---
+
+## **🎯 CORE WORKFLOW**
+
+### **User Journey:**
+
+1. **Register/Login** → Get JWT token
+2. **Update Learning Interests** → Set preferences
+3. **Browse Public Articles** → Find interesting content
+4. **Highlight Text** → Select confusing terms
+5. **AI Explain** → Get simplified explanation
+6. **Save as Note** → Store for future reference
+7. **Manage Notes** → View, edit, delete notes
+
+### **Technical Flow:**
+
+```
+User highlights text → AI explains → Save as note → Manage notes
+```
+
+### **Frontend Integration Example:**
+
+```javascript
+// Complete workflow example for frontend integration
+class ChiralAPI {
+  constructor(baseURL = "http://localhost:3000/api") {
+    this.baseURL = baseURL;
+    this.token = localStorage.getItem("token");
+  }
+
+  // Authentication
+  async login(email, password) {
+    const response = await fetch(`${this.baseURL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await response.json();
+    if (data.access_token) {
+      this.token = data.access_token;
+      localStorage.setItem("token", this.token);
+    }
+    return data;
+  }
+
+  // AI Explain
+  async explainText(highlightedText, context = "") {
+    const response = await fetch(`${this.baseURL}/gemini/explain`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.token}`,
+      },
+      body: JSON.stringify({ highlightedText, context }),
+    });
+    return await response.json();
+  }
+
+  // Notes Management
+  async createNote(highlightedText, explanation, originalContext = "") {
+    const response = await fetch(`${this.baseURL}/notes`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.token}`,
+      },
+      body: JSON.stringify({ highlightedText, explanation, originalContext }),
+    });
+    return await response.json();
+  }
+
+  async getNotes(page = 1, limit = 20) {
+    const response = await fetch(
+      `${this.baseURL}/notes?page=${page}&limit=${limit}`,
+      {
+        headers: { Authorization: `Bearer ${this.token}` },
+      }
+    );
+    return await response.json();
+  }
+}
+
+// Usage example
+const api = new ChiralAPI();
+
+// Complete user workflow
+async function handleTextHighlight(selectedText, context) {
+  try {
+    // 1. Get AI explanation
+    const explanation = await api.explainText(selectedText, context);
+
+    // 2. Save as note
+    const note = await api.createNote(
+      selectedText,
+      explanation.explanation,
+      context
+    );
+
+    // 3. Refresh notes list
+    const notes = await api.getNotes();
+
+    return { explanation, note, notes };
+  } catch (error) {
+    console.error("Error in workflow:", error);
+  }
 }
 ```
 
 ---
 
-## Rate Limiting
+## **🚀 REMOVED FEATURES (For Simplicity)**
 
-- **Public endpoints**: 100 requests per minute per IP
-- **Authenticated endpoints**: 1000 requests per minute per user
-- **AI endpoints**: 50 requests per minute per user (due to external API costs)
+### **Dihapus dari MVP:**
 
----
+- ❌ Complex article recommendations
+- ❌ Article search & filtering
+- ❌ Save articles to favorites
+- ❌ PDF export
+- ❌ Markdown export
+- ❌ Google OAuth (akan ditambah nanti)
+- ❌ AI learning paths
+- ❌ AI quiz generation
+- ❌ AI content summarization
+- ❌ Complex article management
 
-## File Upload Support
+### **Mengapa Dihapus:**
 
-The API includes multer middleware for file uploads with memory storage. This can be used for:
-
-- Profile picture uploads
-- Note attachments
-- Document uploads
-
-File upload endpoints will be added in future updates.
-
----
-
-## Environment Variables
-
-Required environment variables:
-
-```env
-NODE_ENV=development
-PORT=3000
-CLIENT_URL=http://localhost:5173
-JWT_SECRET=your_jwt_secret_key
-GEMINI_API_KEY=your_gemini_api_key
-DATABASE_URL=your_postgresql_connection_string
-```
+- **Focus on Core Value:** AI text explanation + note management
+- **Reduce Complexity:** Easier to develop, test, and maintain
+- **Faster MVP:** Get to market quicker
+- **User Experience:** Less overwhelming, more focused
+- **Technical Debt:** Fewer dependencies and edge cases
 
 ---
 
-## Notes
+## **📦 TECHNOLOGY STACK (Simplified)**
 
-- All timestamps are in ISO 8601 format (UTC)
-- Maximum request body size: 10MB
-- API supports CORS for frontend integration
-- All endpoints return JSON except file downloads
-- Google OAuth integration is planned for future release
-- File upload endpoints will be added in future updates
+### **Backend:**
+
+- Express.js (API server)
+- Sequelize + PostgreSQL (database)
+- GeminiAI (text explanation)
+- JWT (authentication)
+- bcrypt (password hashing)
+
+### **Dependencies Removed:**
+
+- `multer` (file upload)
+- `pdf-lib` (PDF generation)
+- `marked` (markdown processing)
+- `path-to-regexp` (complex routing)
 
 ---
 
-**Version:** 1.0.0
-**Last Updated:** July 22, 2025
-**Contact:** Chiral Learning Development Team
+## **🎯 NEXT STEPS**
+
+1. ✅ **Core MVP Complete**
+2. 🔄 **Frontend Integration** (React/Vite)
+3. 🔄 **State Management** (Redux)
+4. 🔄 **Testing Coverage** (90%+)
+5. 🔄 **Deployment** (Production ready)
+
+**Future Features (Phase 2):**
+
+- Google OAuth
+- PDF/Markdown export
+- Advanced AI features
+- Article recommendations
+- Real-time collaboration
+
+---
+
+## **💡 KEY BENEFITS OF SIMPLIFICATION**
+
+✅ **Faster Development** - Less code, fewer bugs
+✅ **Better UX** - Focused, not overwhelming
+✅ **Easier Testing** - Fewer edge cases
+✅ **Maintainable** - Simple architecture
+✅ **Scalable** - Core features as foundation
+
+**The simplified Chiral-Dev focuses on what matters most: helping users understand complex text with AI and manage their learning notes efficiently.**
