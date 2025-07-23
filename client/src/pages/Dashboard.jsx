@@ -18,7 +18,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("access_token");
         if (!token) return;
 
         const [userResponse, highlightsResponse, notesResponse] =
@@ -152,51 +152,6 @@ export default function Dashboard() {
               </div>
               <div className="text-4xl">🔥</div>
             </div>
-          </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
-            Quick Actions
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Link
-              to="/articles"
-              className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              <div className="text-3xl mr-4">📖</div>
-              <div>
-                <h3 className="font-medium text-gray-900">Browse Articles</h3>
-                <p className="text-sm text-gray-600">
-                  Find new articles to read and learn
-                </p>
-              </div>
-            </Link>
-
-            <Link
-              to="/highlights"
-              className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              <div className="text-3xl mr-4">🔖</div>
-              <div>
-                <h3 className="font-medium text-gray-900">My Highlights</h3>
-                <p className="text-sm text-gray-600">
-                  Review your saved highlights
-                </p>
-              </div>
-            </Link>
-
-            <Link
-              to="/notes"
-              className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              <div className="text-3xl mr-4">📝</div>
-              <div>
-                <h3 className="font-medium text-gray-900">Learning Notes</h3>
-                <p className="text-sm text-gray-600">Access all your notes</p>
-              </div>
-            </Link>
           </div>
         </div>
 

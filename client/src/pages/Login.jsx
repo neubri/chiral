@@ -21,6 +21,7 @@ export default function Login() {
       });
 
       localStorage.setItem("access_token", response.data.access_token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
 
       toast.success("Login successful!");
       navigate("/dashboard");
