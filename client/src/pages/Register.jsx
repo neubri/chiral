@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { toast } from "react-hot-toast";
 import http from "../lib/http";
@@ -12,14 +12,6 @@ export default function Register() {
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (token) {
-      toast.info("You're already logged in.");
-      navigate("/dashboard");
-    }
-  }, [navigate]);
 
   const handleChange = (e) => {
     setFormData({
