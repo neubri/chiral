@@ -1,6 +1,7 @@
 const { comparePassword } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt");
 const { User } = require("../models");
+const googleAuthHelper = require("../helpers/googleAuth");
 
 class AuthController {
   static async register(req, res, next) {
@@ -86,6 +87,59 @@ class AuthController {
 
       res.status(200).json({
         message: "Login successful",
+        access_token,
+        user: cleanUser,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async googleLogin(req, res, next) {
+    try {
+      const { googleToken } = req.body;
+
+      if (!googleToken) {
+        throw { name: "Bad Request", message: "Google token is required" };
+      }
+
+      // Verify Google ID token
+      const googleUserData = await googleAuthHelper.verifyIdToken(googleToken);
+
+      // Check if user already exists
+      let user = await User.findOne({
+        where: {
+          email: googleUserData.email,
+        },
+      });
+
+      if (!user) {
+        // Create new user if doesn't exist
+        user = await User.create({
+          name: googleUserData.name,
+          email: googleUserData.email,
+          googleId: googleUserData.googleId,
+          profilePicture: googleUserData.picture,
+          password: "google_oauth_user", // Placeholder password for Google users
+        });
+      } else {
+        // Update existing user with Google data if not already set
+        if (!user.googleId) {
+          user.googleId = googleUserData.googleId;
+          user.profilePicture = googleUserData.picture || user.profilePicture;
+          await user.save();
+        }
+      }
+
+      // Generate JWT token
+      const access_token = signToken({ id: user.id });
+
+      // Clean user data for response
+      const cleanUser = user.toJSON();
+      delete cleanUser.password;
+
+      res.status(200).json({
+        message: "Google login successful",
         access_token,
         user: cleanUser,
       });

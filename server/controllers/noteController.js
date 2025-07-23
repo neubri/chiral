@@ -6,6 +6,12 @@ class NoteController {
     return {
       id: note.id,
       userId: note.userId,
+      noteType: note.noteType,
+      // Traditional note fields
+      title: note.title,
+      content: note.content,
+      isFavorite: note.isFavorite,
+      // Highlight note fields
       highlightedText: note.highlightedText,
       explanation: note.explanation,
       originalContext: note.originalContext,
@@ -15,26 +21,68 @@ class NoteController {
   }
   static async createNote(req, res, next) {
     try {
-      const { highlightedText, explanation, originalContext } = req.body;
+      const {
+        noteType = "traditional",
+        title,
+        content,
+        isFavorite = false,
+        highlightedText,
+        explanation,
+        originalContext,
+      } = req.body;
 
-      // Enhanced input validation
-      if (!highlightedText) {
-        throw { name: "Bad Request", message: "Highlighted text is required" };
-      }
-
-      if (!explanation) {
-        throw { name: "Bad Request", message: "Explanation is required" };
+      // Validation based on note type
+      if (noteType === "traditional") {
+        if (!title) {
+          throw {
+            name: "Bad Request",
+            message: "Title is required for traditional notes",
+          };
+        }
+        if (!content) {
+          throw {
+            name: "Bad Request",
+            message: "Content is required for traditional notes",
+          };
+        }
+      } else if (noteType === "highlight") {
+        if (!highlightedText) {
+          throw {
+            name: "Bad Request",
+            message: "Highlighted text is required for highlight notes",
+          };
+        }
+        if (!explanation) {
+          throw {
+            name: "Bad Request",
+            message: "Explanation is required for highlight notes",
+          };
+        }
       }
 
       // Length validation to prevent abuse
-      if (highlightedText.length > 5000) {
+      if (title && title.length > 200) {
+        throw {
+          name: "Bad Request",
+          message: "Title is too long (max 200 characters)",
+        };
+      }
+
+      if (content && content.length > 50000) {
+        throw {
+          name: "Bad Request",
+          message: "Content is too long (max 50000 characters)",
+        };
+      }
+
+      if (highlightedText && highlightedText.length > 5000) {
         throw {
           name: "Bad Request",
           message: "Highlighted text is too long (max 5000 characters)",
         };
       }
 
-      if (explanation.length > 10000) {
+      if (explanation && explanation.length > 10000) {
         throw {
           name: "Bad Request",
           message: "Explanation is too long (max 10000 characters)",
@@ -48,19 +96,25 @@ class NoteController {
         };
       }
 
-      // Trim whitespace
-      const sanitizedHighlightedText = highlightedText.trim();
-      const sanitizedExplanation = explanation.trim();
-      const sanitizedOriginalContext = originalContext
-        ? originalContext.trim()
-        : null;
-
-      const note = await Note.create({
+      // Prepare note data based on type
+      const noteData = {
         userId: req.user.id,
-        highlightedText: sanitizedHighlightedText,
-        explanation: sanitizedExplanation,
-        originalContext: sanitizedOriginalContext,
-      });
+        noteType,
+        isFavorite,
+      };
+
+      if (noteType === "traditional") {
+        noteData.title = title.trim();
+        noteData.content = content.trim();
+      } else if (noteType === "highlight") {
+        noteData.highlightedText = highlightedText.trim();
+        noteData.explanation = explanation.trim();
+        noteData.originalContext = originalContext
+          ? originalContext.trim()
+          : null;
+      }
+
+      const note = await Note.create(noteData);
 
       res.status(201).json({
         message: "Note created successfully",
@@ -118,7 +172,14 @@ class NoteController {
   static async updateNote(req, res, next) {
     try {
       const { id } = req.params;
-      const { highlightedText, explanation, originalContext } = req.body;
+      const {
+        title,
+        content,
+        isFavorite,
+        highlightedText,
+        explanation,
+        originalContext,
+      } = req.body;
 
       const note = await Note.findOne({
         where: {
@@ -131,9 +192,20 @@ class NoteController {
         throw { name: "Not Found", message: "Note not found" };
       }
 
-      if (highlightedText) note.highlightedText = highlightedText;
-      if (explanation) note.explanation = explanation;
-      if (originalContext !== undefined) note.originalContext = originalContext;
+      // Update fields based on note type
+      if (note.noteType === "traditional") {
+        if (title !== undefined) note.title = title;
+        if (content !== undefined) note.content = content;
+      } else if (note.noteType === "highlight") {
+        if (highlightedText !== undefined)
+          note.highlightedText = highlightedText;
+        if (explanation !== undefined) note.explanation = explanation;
+        if (originalContext !== undefined)
+          note.originalContext = originalContext;
+      }
+
+      // isFavorite can be updated for both types
+      if (isFavorite !== undefined) note.isFavorite = isFavorite;
 
       await note.save();
 

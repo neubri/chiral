@@ -3,7 +3,7 @@
 const app = require("../app");
 
 // Environment validation
-const requiredEnvVars = ["JWT_SECRET", "GEMINI_API_KEY"];
+const requiredEnvVars = ["JWT_SECRET", "GEMINI_API_KEY", "GOOGLE_CLIENT_ID"];
 const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
 
 if (missingEnvVars.length > 0) {

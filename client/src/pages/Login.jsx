@@ -23,17 +23,13 @@ export default function Login() {
 
     try {
       setLoading(true);
-      const response = await http({
-        method: "POST",
-        url: "/login",
-        data: {
-          email,
-          password,
-        },
+      const response = await http.post("/auth/login", {
+        email,
+        password,
       });
 
       localStorage.setItem("access_token", response.data.access_token);
-      
+
       toast.success("Login successful!");
       navigate("/dashboard");
     } catch (error) {
@@ -55,12 +51,8 @@ export default function Login() {
         <div className="bg-white rounded-2xl shadow-xl p-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Chiral
-            </h1>
-            <p className="text-gray-600 text-sm">
-              AI-Powered Note Taking App
-            </p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Chiral</h1>
+            <p className="text-gray-600 text-sm">AI-Powered Note Taking App</p>
           </div>
 
           {/* Form */}

@@ -141,6 +141,55 @@ POST /api/auth/login
 }
 ```
 
+#### **5. Google Login**
+
+```http
+POST /api/google-login
+```
+
+**Request:**
+
+```json
+{
+  "googleToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjdkYzBkM..."
+}
+```
+
+**Response:**
+
+```json
+{
+  "message": "Google login successful",
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": 13,
+    "name": "John Doe",
+    "email": "john.doe@gmail.com",
+    "googleId": "108472731234567890123",
+    "learningInterests": [],
+    "profilePicture": "https://lh3.googleusercontent.com/...",
+    "createdAt": "2025-07-23T03:50:00.000Z",
+    "updatedAt": "2025-07-23T03:50:00.000Z"
+  }
+}
+```
+
+**Error Responses:**
+
+```json
+// Invalid Google token
+{
+  "name": "Bad Request",
+  "message": "Invalid Google token"
+}
+
+// Missing Google token
+{
+  "name": "Bad Request",
+  "message": "Google token is required"
+}
+```
+
 ---
 
 ### **👤 USER PROFILE**

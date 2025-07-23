@@ -25,31 +25,63 @@ module.exports = (sequelize, DataTypes) => {
       },
       highlightedText: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: true,
         validate: {
-          notNull: {
-            msg: "Highlighted text is required",
-          },
-          notEmpty: {
-            msg: "Highlighted text is required",
+          customValidation(value) {
+            if (this.noteType === "highlight" && !value) {
+              throw new Error(
+                "Highlighted text is required for highlight notes"
+              );
+            }
           },
         },
       },
       explanation: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: true,
         validate: {
-          notNull: {
-            msg: "Explanation is required",
-          },
-          notEmpty: {
-            msg: "Explanation is required",
+          customValidation(value) {
+            if (this.noteType === "highlight" && !value) {
+              throw new Error("Explanation is required for highlight notes");
+            }
           },
         },
       },
       originalContext: {
         type: DataTypes.TEXT,
         allowNull: true,
+      },
+      title: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        validate: {
+          customValidation(value) {
+            if (this.noteType === "traditional" && !value) {
+              throw new Error("Title is required for traditional notes");
+            }
+          },
+        },
+      },
+      content: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+        validate: {
+          customValidation(value) {
+            if (this.noteType === "traditional" && !value) {
+              throw new Error("Content is required for traditional notes");
+            }
+          },
+        },
+      },
+      isFavorite: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      noteType: {
+        type: DataTypes.ENUM("traditional", "highlight"),
+        allowNull: false,
+        defaultValue: "highlight",
       },
     },
     {
