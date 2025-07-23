@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { LinkButton } from "../components/Button";
 
 export default function LandingPage() {
   return (
@@ -20,12 +21,9 @@ export default function LandingPage() {
               >
                 Login
               </Link>
-              <Link
-                to="/register"
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium"
-              >
+              <LinkButton to="/register" variant="primary" size="lg">
                 Get Started
-              </Link>
+              </LinkButton>
             </div>
           </div>
         </div>
@@ -47,18 +45,17 @@ export default function LandingPage() {
             dev.to articles.
           </p>
           <div className="flex items-center justify-center space-x-4 mb-12">
-            <Link
+            <LinkButton
               to="/register"
-              className="bg-blue-600 text-white px-8 py-4 rounded-xl hover:bg-blue-700 font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200"
+              variant="primary"
+              size="xl"
+              className="shadow-lg hover:shadow-xl"
             >
               Start Learning Free
-            </Link>
-            <Link
-              to="/articles"
-              className="bg-white text-blue-600 px-8 py-4 rounded-xl hover:bg-gray-50 font-semibold text-lg border-2 border-blue-600 transition-all duration-200"
-            >
+            </LinkButton>
+            <LinkButton to="/articles" variant="outline" size="xl">
               Browse Articles
-            </Link>
+            </LinkButton>
           </div>
         </div>
 
@@ -246,23 +243,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 py-12">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">📚</span>
-              </div>
-              <span className="text-white font-bold text-xl">Chiral</span>
-            </div>
-            <div className="text-gray-400">
-              <p>&copy; 2025 Chiral. All rights reserved.</p>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
