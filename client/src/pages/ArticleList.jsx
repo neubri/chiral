@@ -15,14 +15,15 @@ export default function ArticleList() {
     "javascript",
     "react",
     "python",
-    "web-development",
+    "webdev",
     "tutorial",
     "beginners",
-    "node",
+    "carrer",
     "css",
     "html",
     "typescript",
     "vue",
+    "redux",
   ];
 
   useEffect(() => {
@@ -114,7 +115,7 @@ export default function ArticleList() {
 
         {/* Articles Grid */}
         {!loading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-center">
             {articles.map((article) => (
               <ArticleCard key={article.id} article={article} />
             ))}

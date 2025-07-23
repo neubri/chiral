@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { toast } from "react-hot-toast";
 import http from "../lib/http";
+import GoogleLoginButton from "../components/GoogleLoginButton";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -144,6 +145,34 @@ export default function Register() {
                 "Create Account"
               )}
             </button>
+          </div>
+
+          {/* Divider */}
+          <div className="my-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="bg-white px-2 text-gray-500">
+                  Or sign up with
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Google Login */}
+          <div className="flex items-center justify-center mb-6">
+            <GoogleLoginButton
+              disabled={loading}
+              onSuccess={(data) => {
+                console.log("Google signup success:", data);
+                navigate("/dashboard");
+              }}
+              onError={(error) => {
+                console.error("Google signup error:", error);
+              }}
+            />
           </div>
 
           <div className="text-center">

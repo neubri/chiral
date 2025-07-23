@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-hot-toast";
 import http from "../lib/http";
+import GoogleLoginButton from "../components/GoogleLoginButton";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -101,6 +102,34 @@ export default function Login() {
               )}
             </button>
           </form>
+
+          {/* Divider */}
+          <div className="my-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="bg-white px-2 text-gray-500">
+                  Or continue with
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Google Login */}
+          <div className="flex items-center justify-center  mb-6">
+            <GoogleLoginButton
+              disabled={loading}
+              onSuccess={(data) => {
+                console.log("Google login success:", data);
+                navigate("/dashboard");
+              }}
+              onError={(error) => {
+                console.error("Google login error:", error);
+              }}
+            />
+          </div>
 
           {/* Register Link */}
           <div className="text-center mt-6">
