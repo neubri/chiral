@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-hot-toast";
-import http from "../lib/http";
+import { useAuth } from "../store/hooks";
+import { loginUser } from "../store/slices/authSlice";
 import GoogleLoginButton from "../components/GoogleLoginButton";
 import { Brain } from "lucide-react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { loading, dispatch } = useAuth();
 
   const navigate = useNavigate();
 
@@ -16,27 +17,19 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      setLoading(true);
-      const response = await http.post("/auth/login", {
-        email,
-        password,
-      });
+      const resultAction = await dispatch(loginUser({ email, password }));
 
-      localStorage.setItem("access_token", response.data.access_token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
-
-      toast.success("Login successful!");
-      navigate("/dashboard");
-    } catch (error) {
-      let message = "Something went wrong";
-
-      if (error?.response?.data?.message) {
-        message = error.response.data.message;
+      if (loginUser.fulfilled.match(resultAction)) {
+        toast.success("Login successful!");
+        navigate("/dashboard");
+      } else {
+        // Handle login error
+        const errorMessage = resultAction.payload || "Login failed";
+        toast.error(errorMessage);
       }
-
-      toast.error(message);
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("Something went wrong");
     }
   }
 

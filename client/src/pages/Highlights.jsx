@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router";
 import {
   Trash2,
@@ -9,33 +9,31 @@ import {
   Bookmark,
   Bot,
 } from "lucide-react";
-import http from "../lib/http";
+import { useHighlights } from "../store/hooks";
+import {
+  fetchHighlights,
+  deleteHighlight,
+  setFilters,
+} from "../store/slices/highlightsSlice";
 import Swal from "sweetalert2";
 
 function Highlights() {
-  const [highlights, setHighlights] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState("newest");
-  const [filterBy, setFilterBy] = useState("all");
+  const { highlights, filters, loading, deleteLoading, error, dispatch } =
+    useHighlights();
 
   useEffect(() => {
-    fetchHighlights();
-  }, []);
+    // Fetch highlights when component mounts
+    dispatch(fetchHighlights());
+  }, [dispatch]);
 
-  const fetchHighlights = async () => {
-    try {
-      const response = await http.get("/highlights");
-      setHighlights(response.data.highlights || []);
-    } catch (error) {
-      console.error("Error fetching highlights:", error);
-      Swal.fire("Error", "Failed to fetch highlights", "error");
-    } finally {
-      setLoading(false);
+  // Show error notification when there's an error
+  useEffect(() => {
+    if (error) {
+      Swal.fire("Error", error, "error");
     }
-  };
+  }, [error]);
 
-  const deleteHighlight = async (id) => {
+  const handleDeleteHighlight = async (id) => {
     const result = await Swal.fire({
       title: "Delete Highlight?",
       text: "This action cannot be undone.",
@@ -49,8 +47,7 @@ function Highlights() {
 
     if (result.isConfirmed) {
       try {
-        await http.delete(`/highlights/${id}`);
-        setHighlights(highlights.filter((h) => h.id !== id));
+        await dispatch(deleteHighlight(id)).unwrap();
         Swal.fire("Deleted!", "Highlight has been deleted.", "success");
       } catch (error) {
         console.error("Error deleting highlight:", error);
@@ -59,33 +56,45 @@ function Highlights() {
     }
   };
 
+  const handleSearchChange = (searchTerm) => {
+    dispatch(setFilters({ searchTerm }));
+  };
+
+  const handleSortChange = (sortBy) => {
+    dispatch(setFilters({ sortBy }));
+  };
+
+  const handleFilterChange = (filterBy) => {
+    dispatch(setFilters({ filterBy }));
+  };
+
   const filteredAndSortedHighlights = highlights
     .filter((highlight) => {
       const matchesSearch =
         highlight.highlightedText
           .toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
+          .includes(filters.searchTerm.toLowerCase()) ||
         highlight.explanation
           ?.toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
+          .includes(filters.searchTerm.toLowerCase()) ||
         highlight.articleTitle
           ?.toLowerCase()
-          .includes(searchTerm.toLowerCase());
+          .includes(filters.searchTerm.toLowerCase());
 
-      if (filterBy === "all") return matchesSearch;
-      if (filterBy === "with-explanation")
+      if (filters.filterBy === "all") return matchesSearch;
+      if (filters.filterBy === "with-explanation")
         return matchesSearch && highlight.explanation;
-      if (filterBy === "without-explanation")
+      if (filters.filterBy === "without-explanation")
         return matchesSearch && !highlight.explanation;
 
       return matchesSearch;
     })
     .sort((a, b) => {
-      if (sortBy === "newest")
+      if (filters.sortBy === "newest")
         return new Date(b.createdAt) - new Date(a.createdAt);
-      if (sortBy === "oldest")
+      if (filters.sortBy === "oldest")
         return new Date(a.createdAt) - new Date(b.createdAt);
-      if (sortBy === "article")
+      if (filters.sortBy === "article")
         return (a.articleTitle || "").localeCompare(b.articleTitle || "");
       return 0;
     });
@@ -126,16 +135,16 @@ function Highlights() {
               <input
                 type="text"
                 placeholder="Search highlights, explanations, or articles..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                value={filters.searchTerm}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 glass-button rounded-xl text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-orange-500/50 focus:border-transparent outline-none smooth-transition"
               />
             </div>
 
             {/* Sort */}
             <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
+              value={filters.sortBy}
+              onChange={(e) => handleSortChange(e.target.value)}
               className="px-4 py-3 glass-button rounded-xl text-gray-700 font-light focus:ring-2 focus:ring-orange-500/50 focus:border-transparent outline-none smooth-transition"
             >
               <option value="newest">Newest First</option>
@@ -145,8 +154,8 @@ function Highlights() {
 
             {/* Filter */}
             <select
-              value={filterBy}
-              onChange={(e) => setFilterBy(e.target.value)}
+              value={filters.filterBy}
+              onChange={(e) => handleFilterChange(e.target.value)}
               className="px-4 py-3 glass-button rounded-xl text-gray-700 font-light focus:ring-2 focus:ring-orange-500/50 focus:border-transparent outline-none smooth-transition"
             >
               <option value="all">All Highlights</option>
@@ -213,16 +222,16 @@ function Highlights() {
               <BookOpen className="w-8 h-8 text-gray-400" />
             </div>
             <h3 className="text-lg font-light text-gray-800 mb-2">
-              {searchTerm
+              {filters.searchTerm
                 ? "No matching highlights found"
                 : "No highlights yet"}
             </h3>
             <p className="text-gray-600 mb-6 font-light">
-              {searchTerm
+              {filters.searchTerm
                 ? "Try adjusting your search or filters"
                 : "Start reading articles and highlighting interesting passages!"}
             </p>
-            {!searchTerm && (
+            {!filters.searchTerm && (
               <Link
                 to="/articles"
                 className="inline-flex items-center px-6 py-3 gradient-secondary text-white rounded-xl hover:shadow-lg hover:scale-105 smooth-transition font-light"
@@ -276,8 +285,9 @@ function Highlights() {
                       </Link>
                     )}
                     <button
-                      onClick={() => deleteHighlight(highlight.id)}
-                      className="glass-button p-2 rounded-xl text-gray-500 hover:text-red-600 smooth-transition"
+                      onClick={() => handleDeleteHighlight(highlight.id)}
+                      disabled={deleteLoading}
+                      className="glass-button p-2 rounded-xl text-gray-500 hover:text-red-600 smooth-transition disabled:opacity-50 disabled:cursor-not-allowed"
                       title="Delete Highlight"
                     >
                       <Trash2 className="w-5 h-5" />

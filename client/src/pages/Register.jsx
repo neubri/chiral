@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { toast } from "react-hot-toast";
-import http from "../lib/http";
+import { useAuth } from "../store/hooks";
+import { registerUser } from "../store/slices/authSlice";
 import GoogleLoginButton from "../components/GoogleLoginButton";
+import { Brain } from "lucide-react";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -11,7 +13,7 @@ export default function Register() {
     password: "",
     confirmPassword: "",
   });
-  const [loading, setLoading] = useState(false);
+  const { loading, dispatch } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -29,27 +31,31 @@ export default function Register() {
       return;
     }
 
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
     try {
-      setLoading(true);
+      const resultAction = await dispatch(
+        registerUser({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        })
+      );
 
-      await http.post("/auth/register", {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-      });
-
-      toast.success("Registration successful! Please login.");
-      navigate("/login");
-    } catch (error) {
-      let message = "Something went wrong";
-
-      if (error?.response?.data?.message) {
-        message = error.response.data.message;
+      if (registerUser.fulfilled.match(resultAction)) {
+        toast.success("Registration successful! Please login.");
+        navigate("/login");
+      } else {
+        // Handle registration error
+        const errorMessage = resultAction.payload || "Registration failed";
+        toast.error(errorMessage);
       }
-
-      toast.error(message);
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast.error("Something went wrong");
     }
   };
 
@@ -59,7 +65,9 @@ export default function Register() {
         <div className="glass rounded-3xl p-8 shadow-2xl border border-white/20">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full glass-card mb-4">
-              <span className="text-2xl">�</span>
+              <span className="text-2xl">
+                <Brain className="w-8 h-8 text-orange-600" />
+              </span>
             </div>
             <h2 className="text-3xl font-light text-gray-800 mb-2">
               Join Chiral

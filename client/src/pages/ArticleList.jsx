@@ -1,15 +1,23 @@
-import { useState, useEffect } from "react";
-import api from "../lib/http";
+import { useEffect } from "react";
+import { useArticles } from "../store/hooks";
+import {
+  fetchPublicArticles,
+  setPublicFilter,
+} from "../store/slices/articlesSlice";
 import ArticleCard from "../components/ArticleCard";
 import { Button } from "../components/Button";
 import Swal from "sweetalert2";
 import { BookOpen } from "lucide-react";
 
 export default function ArticleList() {
-  const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTag, setSearchTag] = useState("programming");
-  const [perPage, setPerPage] = useState(10);
+  const {
+    publicArticles,
+    publicTag,
+    publicPerPage,
+    publicLoading,
+    publicError,
+    dispatch,
+  } = useArticles();
 
   const popularTags = [
     "programming",
@@ -28,27 +36,33 @@ export default function ArticleList() {
   ];
 
   useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        setLoading(true);
-        const response = await api.get(
-          `/articles?tag=${searchTag}&per_page=${perPage}`
-        );
-        setArticles(response.data.articles);
-      } catch (error) {
-        console.error("Error fetching articles:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Failed to fetch articles",
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
+    // Fetch articles when component mounts or when filters change
+    dispatch(
+      fetchPublicArticles({
+        tag: publicTag,
+        per_page: publicPerPage,
+      })
+    );
+  }, [dispatch, publicTag, publicPerPage]);
 
-    fetchArticles();
-  }, [searchTag, perPage]);
+  // Show error notification when there's an error
+  useEffect(() => {
+    if (publicError) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to fetch articles",
+      });
+    }
+  }, [publicError]);
+
+  const handleTagChange = (tag) => {
+    dispatch(setPublicFilter({ tag }));
+  };
+
+  const handlePerPageChange = (per_page) => {
+    dispatch(setPublicFilter({ per_page: parseInt(per_page) }));
+  };
 
   return (
     <div className="min-h-screen gradient-calm">
@@ -78,9 +92,9 @@ export default function ArticleList() {
                 {popularTags.map((tag) => (
                   <button
                     key={tag}
-                    onClick={() => setSearchTag(tag)}
+                    onClick={() => handleTagChange(tag)}
                     className={`px-4 py-2 rounded-xl text-sm font-light smooth-transition ${
-                      searchTag === tag
+                      publicTag === tag
                         ? "gradient-secondary text-white"
                         : "glass-button text-gray-700 hover:text-orange-600"
                     }`}
@@ -97,8 +111,8 @@ export default function ArticleList() {
                 Articles per page
               </label>
               <select
-                value={perPage}
-                onChange={(e) => setPerPage(Number(e.target.value))}
+                value={publicPerPage}
+                onChange={(e) => handlePerPageChange(e.target.value)}
                 className="glass-card px-3 py-2 rounded-xl text-gray-700 font-light focus:outline-none focus:ring-2 focus:ring-orange-500/50"
               >
                 <option value={5}>5</option>
@@ -111,7 +125,7 @@ export default function ArticleList() {
         </div>
 
         {/* Loading State */}
-        {loading && (
+        {publicLoading && (
           <div className="flex justify-center items-center py-12">
             <div className="glass-card p-8 rounded-3xl flex flex-col items-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mb-4"></div>
@@ -121,16 +135,16 @@ export default function ArticleList() {
         )}
 
         {/* Articles Grid */}
-        {!loading && (
+        {!publicLoading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {articles.map((article) => (
+            {publicArticles.map((article) => (
               <ArticleCard key={article.id} article={article} />
             ))}
           </div>
         )}
 
         {/* Empty State */}
-        {!loading && articles.length === 0 && (
+        {!publicLoading && publicArticles.length === 0 && (
           <div className="text-center py-12">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full glass-card mb-4">
               <span className="text-3xl">📄</span>

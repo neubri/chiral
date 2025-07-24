@@ -1,6 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router";
-import api from "../lib/http";
+import { useAuth, useNotes, useHighlights, useDashboard } from "../store/hooks";
+import { fetchUserProfile } from "../store/slices/authSlice";
+import { fetchNotes } from "../store/slices/notesSlice";
+import { fetchHighlights } from "../store/slices/highlightsSlice";
 import Swal from "sweetalert2";
 import {
   Bookmark,
@@ -14,55 +17,22 @@ import {
 } from "lucide-react";
 
 export default function Dashboard() {
-  const [user, setUser] = useState(null);
-  const [recentHighlights, setRecentHighlights] = useState([]);
-  const [recentNotes, setRecentNotes] = useState([]);
-  const [stats, setStats] = useState({
-    totalHighlights: 0,
-    totalNotes: 0,
-    articlesRead: 0,
-    thisWeekHighlights: 0,
-  });
-  const [loading, setLoading] = useState(true);
+  const { isAuthenticated, dispatch: authDispatch } = useAuth();
+  const { dispatch: notesDispatch } = useNotes();
+  const { dispatch: highlightsDispatch } = useHighlights();
+  const { recentNotes, recentHighlights, stats, isLoading } = useDashboard();
 
   useEffect(() => {
     const fetchDashboardData = async () => {
+      if (!isAuthenticated) return;
+
       try {
-        const token = localStorage.getItem("access_token");
-        if (!token) return;
-
-        const [userResponse, highlightsResponse, notesResponse] =
-          await Promise.all([
-            api.get("/auth/profile", {
-              headers: { Authorization: `Bearer ${token}` },
-            }),
-            api.get("/highlights?limit=5", {
-              headers: { Authorization: `Bearer ${token}` },
-            }),
-            api.get("/notes?limit=5", {
-              headers: { Authorization: `Bearer ${token}` },
-            }),
-          ]);
-
-        setUser(userResponse.data.user);
-        setRecentHighlights(highlightsResponse.data.highlights);
-        setRecentNotes(notesResponse.data.notes);
-
-        // Calculate stats
-        const allHighlights = highlightsResponse.data.highlights;
-        const uniqueArticles = new Set(allHighlights.map((h) => h.articleId))
-          .size;
-        const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-        const thisWeekHighlights = allHighlights.filter(
-          (h) => new Date(h.createdAt) > weekAgo
-        ).length;
-
-        setStats({
-          totalHighlights: highlightsResponse.data.total || 0,
-          totalNotes: notesResponse.data.total || 0,
-          articlesRead: uniqueArticles,
-          thisWeekHighlights,
-        });
+        // Fetch all dashboard data in parallel using Redux actions
+        await Promise.all([
+          authDispatch(fetchUserProfile()),
+          notesDispatch(fetchNotes({ limit: 5 })),
+          highlightsDispatch(fetchHighlights({ limit: 5 })),
+        ]);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
         Swal.fire({
@@ -70,13 +40,11 @@ export default function Dashboard() {
           title: "Error",
           text: "Failed to load dashboard data",
         });
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchDashboardData();
-  }, []);
+  }, [isAuthenticated, authDispatch, notesDispatch, highlightsDispatch]);
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -87,7 +55,7 @@ export default function Dashboard() {
     });
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen gradient-calm flex items-center justify-center">
         <div className="glass-card p-8 rounded-3xl flex flex-col items-center">

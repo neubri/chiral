@@ -66,7 +66,7 @@ export default function ArticleCard({ article }) {
             {article.tag_list.slice(0, 3).map((tag, index) => (
               <span
                 key={index}
-                className="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-full font-medium"
+                className="px-2 py-1 bg-blue-50 text-orange-600 text-xs rounded-full font-medium"
               >
                 #{tag}
               </span>
