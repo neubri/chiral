@@ -100,6 +100,7 @@ class HighlightController {
         articleId,
         isBookmarked,
         search,
+        sortBy = "newest",
       } = req.query;
 
       const offset = (page - 1) * limit;
@@ -125,11 +126,23 @@ class HighlightController {
         ];
       }
 
+      // Handle sorting
+      let orderClause;
+      switch (sortBy) {
+        case "oldest":
+          orderClause = [["createdAt", "ASC"]];
+          break;
+        case "newest":
+        default:
+          orderClause = [["createdAt", "DESC"]];
+          break;
+      }
+
       const highlights = await Highlight.findAndCountAll({
         where,
         limit: parseInt(limit),
         offset,
-        order: [["createdAt", "DESC"]],
+        order: orderClause,
         include: [
           {
             model: User,
@@ -186,7 +199,7 @@ class HighlightController {
   static async updateHighlight(req, res, next) {
     try {
       const { id } = req.params;
-      const { explanation, tags, isBookmarked } = req.body;
+      const { highlightedText, explanation, tags, isBookmarked } = req.body;
 
       const highlight = await Highlight.findOne({
         where: {
@@ -200,6 +213,15 @@ class HighlightController {
       }
 
       // Update allowed fields
+      if (highlightedText !== undefined) {
+        if (highlightedText.length > 5000) {
+          throw {
+            name: "Bad Request",
+            message: "Highlighted text is too long (max 5000 characters)",
+          };
+        }
+        highlight.highlightedText = highlightedText.trim();
+      }
       if (explanation !== undefined) {
         highlight.explanation = explanation;
       }
@@ -286,8 +308,8 @@ class HighlightController {
         explanation,
         context: highlight.context,
         message: regenerate
-          ? "Explanation regenerated"
-          : "Explanation generated",
+          ? "Explanation regenerated successfully"
+          : "Explanation generated successfully",
       });
     } catch (error) {
       next(error);

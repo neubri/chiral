@@ -360,4 +360,102 @@ describe("Notes Management", () => {
       expect(response.status).toBe(401);
     });
   });
+
+  describe("Additional Note Tests", () => {
+    it("should create note with highlight type", async () => {
+      const response = await request(app)
+        .post("/api/notes")
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+          highlightedText: "Important text",
+          explanation: "This is important",
+          originalContext: "From article ABC",
+          noteType: "highlight",
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body.note.noteType).toBe("highlight");
+    });
+
+    it("should handle invalid note type", async () => {
+      const response = await request(app)
+        .post("/api/notes")
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+          title: "Test Note",
+          content: "Test Content",
+          noteType: "invalid",
+        });
+
+      expect(response.status).toBe(400);
+    });
+
+    it("should filter notes by note type", async () => {
+      // Create notes with different types
+      await Note.bulkCreate([
+        {
+          userId: testUser.id,
+          title: "Traditional Note",
+          content: "Content 1",
+          noteType: "traditional",
+          createdAt: new Date("2025-01-01"),
+          updatedAt: new Date(),
+        },
+        {
+          userId: testUser.id,
+          highlightedText: "Highlighted Text",
+          explanation: "Explanation",
+          noteType: "highlight",
+          createdAt: new Date("2025-01-02"),
+          updatedAt: new Date(),
+        },
+      ]);
+
+      const response = await request(app)
+        .get("/api/notes?noteType=traditional")
+        .set("Authorization", `Bearer ${authToken}`);
+
+      expect(response.status).toBe(200);
+      expect(
+        response.body.notes.every((note) => note.noteType === "traditional")
+      ).toBe(true);
+    });
+
+    it("should sort notes by different fields", async () => {
+      const response = await request(app)
+        .get("/api/notes?sortBy=title&sortOrder=asc")
+        .set("Authorization", `Bearer ${authToken}`);
+
+      expect(response.status).toBe(200);
+    });
+
+    it("should handle database errors during creation", async () => {
+      const originalCreate = Note.create;
+      Note.create = jest.fn().mockRejectedValue(new Error("Database error"));
+
+      const response = await request(app)
+        .post("/api/notes")
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+          title: "Test Note",
+          content: "Test Content",
+        });
+
+      expect(response.status).toBe(500);
+      Note.create = originalCreate;
+    });
+
+    it("should handle validation errors", async () => {
+      const response = await request(app)
+        .post("/api/notes")
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+          title: "",
+          content: "",
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toContain("required");
+    });
+  });
 });

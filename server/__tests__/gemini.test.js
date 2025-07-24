@@ -18,12 +18,11 @@ describe("Gemini AI Explain", () => {
     // Clean up
     await User.destroy({ where: { email: "test@example.com" } });
 
-    // Create test user
-    const hashedPassword = bcrypt.hashSync("password123", 10);
+    // Create test user - let the model hash the password
     testUser = await User.create({
       name: "Test User",
       email: "test@example.com",
-      password: hashedPassword,
+      password: "password123", // Let the model hash this
       learningInterests: ["React", "Node.js"],
     });
 

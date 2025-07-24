@@ -116,7 +116,12 @@ describe("Public Endpoints", () => {
 
       // Verify the API was called with the correct parameters
       expect(axios.get).toHaveBeenCalledWith(
-        expect.stringContaining("tag=react")
+        "https://dev.to/api/articles",
+        expect.objectContaining({
+          params: expect.objectContaining({
+            tag: "react",
+          }),
+        })
       );
     });
 

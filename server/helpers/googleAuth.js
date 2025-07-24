@@ -1,4 +1,4 @@
-const { OAuth2Client } = require('google-auth-library');
+const { OAuth2Client } = require("google-auth-library");
 
 class GoogleAuthHelper {
   constructor() {
@@ -13,7 +13,7 @@ class GoogleAuthHelper {
       });
 
       const payload = ticket.getPayload();
-      
+
       return {
         googleId: payload.sub,
         email: payload.email,
@@ -23,7 +23,7 @@ class GoogleAuthHelper {
       };
     } catch (error) {
       throw {
-        name: "Unauthorized",
+        name: "Bad Request",
         message: "Invalid Google token",
         details: error.message,
       };

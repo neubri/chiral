@@ -1,4 +1,5 @@
 const { Note } = require("../models");
+const { Op } = require("sequelize");
 
 class NoteController {
   // Helper function to clean note response (remove legacy fields)
@@ -127,11 +128,29 @@ class NoteController {
 
   static async getNotes(req, res, next) {
     try {
-      const { page = 1, limit = 20 } = req.query;
+      const { page = 1, limit = 20, search, isFavorite } = req.query;
       const offset = (page - 1) * limit;
 
+      // Build where clause
+      const whereClause = { userId: req.user.id };
+
+      // Add search functionality
+      if (search) {
+        whereClause[Op.or] = [
+          { title: { [Op.iLike]: `%${search}%` } },
+          { content: { [Op.iLike]: `%${search}%` } },
+          { highlightedText: { [Op.iLike]: `%${search}%` } },
+          { explanation: { [Op.iLike]: `%${search}%` } },
+        ];
+      }
+
+      // Add favorites filter
+      if (isFavorite === "true") {
+        whereClause.isFavorite = true;
+      }
+
       const notes = await Note.findAndCountAll({
-        where: { userId: req.user.id },
+        where: whereClause,
         limit: parseInt(limit),
         offset,
         order: [["createdAt", "DESC"]],
