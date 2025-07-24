@@ -5,7 +5,6 @@ describe("App", () => {
   describe("GET /", () => {
     it("should return health check message", async () => {
       const response = await request(app).get("/");
-
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty(
         "message",
@@ -19,7 +18,6 @@ describe("App", () => {
   describe("GET /api/health", () => {
     it("should return health check message", async () => {
       const response = await request(app).get("/api/health");
-
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty(
         "message",
@@ -33,7 +31,6 @@ describe("App", () => {
   describe("Invalid routes", () => {
     it("should return 404 for non-existent routes", async () => {
       const response = await request(app).get("/non-existent-route");
-
       expect(response.status).toBe(404);
     });
   });
