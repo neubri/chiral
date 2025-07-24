@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { toast } from "react-hot-toast";
 import http from "../lib/http";
 import GoogleLoginButton from "../components/GoogleLoginButton";
+import { Brain } from "lucide-react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -40,13 +41,18 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
+    <div className="min-h-screen flex items-center justify-center gradient-calm px-4 py-8">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="glass rounded-3xl p-8 shadow-2xl border border-white/20">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Chiral</h1>
-            <p className="text-gray-600 text-sm">AI-Powered Note Taking App</p>
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full glass-card mb-4">
+              <Brain className="w-8 h-8 text-orange-600" />
+            </div>
+            <h1 className="text-3xl font-light text-gray-800 mb-2">Chiral</h1>
+            <p className="text-gray-600 text-sm font-light">
+              AI-Powered Note Taking
+            </p>
           </div>
 
           {/* Form */}
@@ -61,7 +67,7 @@ export default function Login() {
               <input
                 id="email"
                 type="email"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                className="w-full px-4 py-3 glass-card rounded-xl text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-orange-500/50 focus:border-transparent outline-none smooth-transition"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
@@ -79,7 +85,7 @@ export default function Login() {
               <input
                 id="password"
                 type="password"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                className="w-full px-4 py-3 glass-card rounded-xl text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-orange-500/50 focus:border-transparent outline-none smooth-transition"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
@@ -89,7 +95,7 @@ export default function Login() {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center"
+              className="w-full gradient-secondary text-white font-medium py-3 px-4 rounded-xl smooth-transition hover:shadow-lg hover:scale-[1.02] disabled:opacity-70 disabled:hover:scale-100 flex items-center justify-center"
               disabled={loading}
             >
               {loading ? (
@@ -104,13 +110,13 @@ export default function Login() {
           </form>
 
           {/* Divider */}
-          <div className="my-6">
+          <div className="my-8">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
+                <div className="w-full border-t border-white/20" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="bg-white px-2 text-gray-500">
+                <span className="glass-card px-4 py-1 rounded-full text-gray-600 text-xs font-light">
                   Or continue with
                 </span>
               </div>
@@ -118,7 +124,7 @@ export default function Login() {
           </div>
 
           {/* Google Login */}
-          <div className="flex items-center justify-center  mb-6">
+          <div className="flex items-center justify-center mb-6">
             <GoogleLoginButton
               disabled={loading}
               onSuccess={(data) => {
@@ -132,13 +138,13 @@ export default function Login() {
           </div>
 
           {/* Register Link */}
-          <div className="text-center mt-6">
-            <p className="text-gray-600 text-sm">
+          <div className="text-center">
+            <p className="text-gray-600 text-sm font-light">
               Don't have an account?{" "}
               <button
                 type="button"
                 onClick={() => navigate("/register")}
-                className="text-blue-600 hover:text-blue-700 font-medium"
+                className="text-orange-600 hover:text-orange-700 font-medium smooth-transition"
               >
                 Sign up
               </button>

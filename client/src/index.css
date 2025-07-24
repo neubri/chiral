@@ -1,2 +1,112 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+/* Custom Font */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap");
+
+/* Custom CSS Variables for Design System */
+:root {
+  --primary: #f6f4f2;
+  --secondary: #ff5924;
+  --glass-bg: rgba(246, 244, 242, 0.1);
+  --glass-border: rgba(246, 244, 242, 0.2);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  --font-primary: "Louize-Regular-205TF", "Inter", sans-serif;
+}
+
+/* Base Typography */
+* {
+  font-family: var(--font-primary);
+}
+
+/* Glassmorphism Base Styles */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+}
+
+.glass-button {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.glass-button:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Gradient Backgrounds */
+.gradient-primary {
+  background: linear-gradient(135deg, #f6f4f2 0%, #e8e4e0 100%);
+}
+
+.gradient-secondary {
+  background: linear-gradient(135deg, #ff5924 0%, #ff7a4d 100%);
+}
+
+.gradient-calm {
+  background: linear-gradient(
+    135deg,
+    #f8fafc 0%,
+    #f1f5f9 25%,
+    #e2e8f0 50%,
+    #cbd5e1 75%,
+    #94a3b8 100%
+  );
+}
+
+.gradient-warm {
+  background: linear-gradient(
+    135deg,
+    #fef7f0 0%,
+    #fed7aa 25%,
+    #fdba74 50%,
+    #fb923c 75%,
+    #ff5924 100%
+  );
+}
+
+/* Smooth Animations */
+.smooth-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus States */
+.focus-ring {
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 2px rgba(255, 89, 36, 0.5);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 89, 36, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 89, 36, 0.5);
+}

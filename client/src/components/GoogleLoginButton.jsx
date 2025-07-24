@@ -75,7 +75,7 @@ export default function GoogleLoginButton({
     };
 
     initializeGoogle();
-  }, [handleCredentialResponse]);
+  }, []);
 
   return (
     <div className="w-full flex justify-center">

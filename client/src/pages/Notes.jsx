@@ -156,26 +156,34 @@ function Notes() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen gradient-calm flex items-center justify-center">
+        <div className="glass-card p-8 rounded-3xl flex flex-col items-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mb-4"></div>
+          <p className="text-gray-600 font-light">Loading your notes...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
+    <div className="min-h-screen gradient-calm pt-20">
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">My Notes</h1>
-            <p className="text-gray-600">
-              Create, organize and manage your personal notes
-            </p>
+        <div className="mb-8 text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full glass-card mb-4">
+            <FileText className="w-8 h-8 text-orange-600" />
           </div>
+          <h1 className="text-3xl font-light text-gray-800 mb-2">My Notes</h1>
+          <p className="text-gray-600 font-light max-w-2xl mx-auto">
+            Create, organize and manage your personal notes
+          </p>
+        </div>
+
+        {/* Create Note Button */}
+        <div className="mb-6 text-center">
           <button
             onClick={() => setIsCreating(true)}
-            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center px-6 py-3 gradient-secondary text-white rounded-xl hover:shadow-lg hover:scale-105 smooth-transition font-light"
           >
             <Plus className="w-5 h-5 mr-2" />
             New Note
@@ -184,13 +192,13 @@ function Notes() {
 
         {/* Create/Edit Form */}
         {isCreating && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          <div className="glass-card rounded-2xl p-6 mb-6">
+            <h3 className="text-lg font-light text-gray-800 mb-4">
               {editingNote ? "Edit Note" : "Create New Note"}
             </h3>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-light text-gray-700 mb-2">
                   Title
                 </label>
                 <input
@@ -199,13 +207,13 @@ function Notes() {
                   onChange={(e) =>
                     setFormData({ ...formData, title: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 glass-card rounded-xl text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-orange-500/50 focus:border-transparent outline-none smooth-transition"
                   placeholder="Enter note title..."
                   required
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-light text-gray-700 mb-2">
                   Content
                 </label>
                 <textarea
@@ -214,37 +222,37 @@ function Notes() {
                     setFormData({ ...formData, content: e.target.value })
                   }
                   rows={6}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 glass-card rounded-xl text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-orange-500/50 focus:border-transparent outline-none smooth-transition"
                   placeholder="Write your note content here..."
                   required
                 />
               </div>
               <div className="mb-6">
-                <label className="flex items-center">
+                <label className="flex items-center glass-button p-3 rounded-xl">
                   <input
                     type="checkbox"
                     checked={formData.isFavorite}
                     onChange={(e) =>
                       setFormData({ ...formData, isFavorite: e.target.checked })
                     }
-                    className="mr-2"
+                    className="mr-3 accent-orange-500"
                   />
-                  <span className="text-sm text-gray-700">
-                    Mark as favorite
+                  <span className="text-sm text-gray-700 font-light">
+                    Mark as favorite ⭐
                   </span>
                 </label>
               </div>
               <div className="flex space-x-3">
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                  className="px-6 py-3 gradient-secondary text-white rounded-xl hover:shadow-lg hover:scale-105 smooth-transition font-light"
                 >
                   {editingNote ? "Update Note" : "Create Note"}
                 </button>
                 <button
                   type="button"
                   onClick={cancelEdit}
-                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors"
+                  className="px-6 py-3 glass-button text-gray-700 rounded-xl hover:scale-105 smooth-transition font-light"
                 >
                   Cancel
                 </button>
@@ -254,7 +262,7 @@ function Notes() {
         )}
 
         {/* Controls */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+        <div className="glass-card rounded-2xl p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             {/* Search */}
             <div className="flex-1 relative">
@@ -264,7 +272,7 @@ function Notes() {
                 placeholder="Search notes by title or content..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-3 glass-button rounded-xl text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-orange-500/50 focus:border-transparent outline-none smooth-transition"
               />
             </div>
 
@@ -272,7 +280,7 @@ function Notes() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="px-4 py-3 glass-button rounded-xl text-gray-700 font-light focus:ring-2 focus:ring-orange-500/50 focus:border-transparent outline-none smooth-transition"
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
@@ -284,7 +292,7 @@ function Notes() {
             <select
               value={filterBy}
               onChange={(e) => setFilterBy(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="px-4 py-3 glass-button rounded-xl text-gray-700 font-light focus:ring-2 focus:ring-orange-500/50 focus:border-transparent outline-none smooth-transition"
             >
               <option value="all">All Notes</option>
               <option value="favorites">Favorites Only</option>
@@ -295,34 +303,34 @@ function Notes() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="glass-card rounded-2xl p-6 hover:scale-105 smooth-transition">
             <div className="flex items-center">
               <FileText className="w-8 h-8 text-blue-600 mr-3" />
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Notes</p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-sm font-light text-gray-600">Total Notes</p>
+                <p className="text-2xl font-light text-gray-800">
                   {notes.length}
                 </p>
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="glass-card rounded-2xl p-6 hover:scale-105 smooth-transition">
             <div className="flex items-center">
               <Star className="w-8 h-8 text-yellow-600 mr-3" />
               <div>
-                <p className="text-sm font-medium text-gray-600">Favorites</p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-sm font-light text-gray-600">Favorites</p>
+                <p className="text-2xl font-light text-gray-800">
                   {notes.filter((note) => note.isFavorite).length}
                 </p>
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="glass-card rounded-2xl p-6 hover:scale-105 smooth-transition">
             <div className="flex items-center">
               <Calendar className="w-8 h-8 text-green-600 mr-3" />
               <div>
-                <p className="text-sm font-medium text-gray-600">This Week</p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-sm font-light text-gray-600">This Week</p>
+                <p className="text-2xl font-light text-gray-800">
                   {
                     notes.filter((note) => {
                       const noteDate = new Date(note.createdAt);
@@ -340,12 +348,14 @@ function Notes() {
 
         {/* Notes List */}
         {filteredAndSortedNotes.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-            <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <div className="glass-card rounded-2xl p-12 text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full glass-button mb-4">
+              <FileText className="w-8 h-8 text-gray-400" />
+            </div>
+            <h3 className="text-lg font-light text-gray-800 mb-2">
               {searchTerm ? "No matching notes found" : "No notes yet"}
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 mb-6 font-light">
               {searchTerm
                 ? "Try adjusting your search or filters"
                 : "Create your first note to get started!"}
@@ -353,7 +363,7 @@ function Notes() {
             {!searchTerm && (
               <button
                 onClick={() => setIsCreating(true)}
-                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                className="inline-flex items-center px-6 py-3 gradient-secondary text-white rounded-xl hover:shadow-lg hover:scale-105 smooth-transition font-light"
               >
                 <Plus className="w-5 h-5 mr-2" />
                 Create First Note
@@ -365,16 +375,16 @@ function Notes() {
             {filteredAndSortedNotes.map((note) => (
               <div
                 key={note.id}
-                className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
+                className="glass-card rounded-2xl p-6 hover:scale-[1.02] smooth-transition"
               >
                 <div className="flex justify-between items-start mb-3">
-                  <h3 className="text-lg font-semibold text-gray-900 truncate flex-1">
+                  <h3 className="text-lg font-light text-gray-800 truncate flex-1">
                     {note.title}
                   </h3>
-                  <div className="flex items-center space-x-1 ml-2">
+                  <div className="flex items-center space-x-2 ml-2">
                     <button
                       onClick={() => toggleFavorite(note)}
-                      className={`p-1 transition-colors ${
+                      className={`glass-button p-2 rounded-xl smooth-transition ${
                         note.isFavorite
                           ? "text-yellow-500 hover:text-yellow-600"
                           : "text-gray-400 hover:text-yellow-500"
@@ -393,14 +403,14 @@ function Notes() {
                     </button>
                     <button
                       onClick={() => startEdit(note)}
-                      className="p-1 text-gray-400 hover:text-blue-600 transition-colors"
+                      className="glass-button p-2 rounded-xl text-gray-400 hover:text-blue-600 smooth-transition"
                       title="Edit Note"
                     >
                       <Edit3 className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => deleteNote(note.id)}
-                      className="p-1 text-gray-400 hover:text-red-600 transition-colors"
+                      className="glass-button p-2 rounded-xl text-gray-400 hover:text-red-600 smooth-transition"
                       title="Delete Note"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -408,14 +418,14 @@ function Notes() {
                   </div>
                 </div>
 
-                <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                <p className="text-gray-600 text-sm mb-4 line-clamp-3 font-light">
                   {note.content.length > 150
                     ? `${note.content.substring(0, 150)}...`
                     : note.content}
                 </p>
 
                 <div className="flex justify-between items-center text-xs text-gray-500">
-                  <span>
+                  <span className="font-light">
                     {new Date(
                       note.updatedAt || note.createdAt
                     ).toLocaleDateString("en-US", {
@@ -425,7 +435,7 @@ function Notes() {
                     })}
                   </span>
                   {note.isFavorite && (
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-light glass-button text-yellow-700">
                       ⭐ Favorite
                     </span>
                   )}

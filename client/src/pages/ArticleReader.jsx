@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router";
 import api from "../lib/http";
 import Swal from "sweetalert2";
 import Markdown from "react-markdown";
+import { Lightbulb, Bot, BookOpen, Bookmark, FileText } from "lucide-react";
 
 export default function ArticleReader() {
   const { id } = useParams();
@@ -121,28 +122,39 @@ export default function ArticleReader() {
 
       setHighlights((prev) => [...prev, newHighlight]);
 
-      // Show explanation in enhanced modal
+      // Show explanation in enhanced modal with glass-card design
       Swal.fire({
-        title: "🤖 AI-Powered Explanation",
+        title: "",
         html: `
-          <div class="text-left space-y-4">
-            <div class="bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200 p-4 rounded-lg">
-              <div class="flex items-center mb-2">
-                <svg class="w-5 h-5 text-yellow-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"></path>
-                </svg>
-                <strong class="text-yellow-800">Selected Text:</strong>
-              </div>
-              <p class="text-yellow-700 italic leading-relaxed">"${selectedText}"</p>
-            </div>
-            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 p-4 rounded-lg">
-              <div class="flex items-center mb-2">
-                <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="space-y-6">
+            <!-- Header with icon and title -->
+            <div class="text-center mb-6">
+              <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                 </svg>
-                <strong class="text-blue-800">AI Explanation:</strong>
               </div>
-              <div class="text-blue-700 leading-relaxed">
+              <h3 class="text-2xl font-bold text-gray-800 mb-2 flex items-center gap-2">
+                <Lightbulb className="w-6 h-6" /> AI-Powered Explanation
+              </h3>
+            </div>
+
+            <!-- Selected Text Card -->
+            <div class="glass-card rounded-xl p-6 hover:scale-105 smooth-transition" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2);">
+              <div class="flex items-center mb-3">
+                <span class="text-2xl mr-3">🖱️</span>
+                <span class="font-light text-lg text-gray-800">Selected Text</span>
+              </div>
+              <p class="text-gray-700 italic leading-relaxed font-light bg-white/20 p-4 rounded-lg border border-white/30">"${selectedText}"</p>
+            </div>
+
+            <!-- AI Explanation Card -->
+            <div class="glass-card rounded-xl p-6 hover:scale-105 smooth-transition" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2);">
+              <div class="flex items-center mb-3">
+                <Bot className="w-6 h-6 text-orange-600 mr-3" />
+                <span class="font-light text-lg text-gray-800">AI Explanation</span>
+              </div>
+              <div class="text-gray-700 leading-relaxed font-light bg-white/20 p-4 rounded-lg border border-white/30">
                 ${
                   newHighlight.explanation ||
                   "🔄 Generating detailed explanation..."
@@ -155,15 +167,17 @@ export default function ArticleReader() {
         showCancelButton: true,
         cancelButtonText: "Close",
         width: "90%",
-        maxWidth: "600px",
+        maxWidth: "700px",
         heightAuto: false,
+        background: "rgba(255, 255, 255, 0.95)",
+        backdrop: "rgba(0, 0, 0, 0.4)",
         customClass: {
-          popup: "rounded-2xl",
-          title: "text-xl font-bold text-gray-800",
+          popup: "rounded-3xl shadow-2xl border-0",
+          container: "backdrop-blur-sm",
           confirmButton:
-            "bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 border-0 rounded-lg px-6 py-2 font-medium",
+            "glass-card gradient-secondary text-white border-0 rounded-xl px-8 py-3 font-light hover:scale-105 smooth-transition shadow-lg",
           cancelButton:
-            "bg-gray-100 hover:bg-gray-200 text-gray-700 border-0 rounded-lg px-6 py-2 font-medium",
+            "glass-card bg-white/80 hover:bg-white/90 text-gray-700 border border-white/30 rounded-xl px-8 py-3 font-light hover:scale-105 smooth-transition",
         },
         buttonsStyling: false,
       }).then((result) => {
@@ -206,22 +220,36 @@ export default function ArticleReader() {
         )
       );
 
+      // Enhanced success message with glass-card design
       Swal.fire({
-        icon: "success",
-        title: "📚 Bookmarked Successfully!",
+        title: "",
         html: `
-          <div class="text-center">
-            <p class="text-gray-600 mb-4">Your highlight has been saved to your learning notes.</p>
-            <div class="bg-green-50 border border-green-200 rounded-lg p-3">
-              <p class="text-green-700 text-sm">💡 <strong>Tip:</strong> Access all your highlights from the dashboard</p>
+          <div class="text-center space-y-4">
+            <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto shadow-lg">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-green-800 mb-2 flex items-center gap-2">
+              <BookOpen className="w-5 h-5" /> Bookmarked Successfully!
+            </h3>
+
+            <div class="glass-card rounded-xl p-6 hover:scale-105 smooth-transition" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2);">
+              <div class="flex items-center mb-3 justify-center">
+                <Bookmark className="w-6 h-6 text-orange-600 mr-3" />
+                <span class="font-light text-lg text-gray-800">Learning Progress</span>
+              </div>
+              <p class="text-gray-700 font-light">Your highlight has been saved to your learning notes and can be accessed from the dashboard.</p>
             </div>
           </div>
         `,
-        timer: 3000,
+        timer: 4000,
         showConfirmButton: false,
+        background: "rgba(255, 255, 255, 0.95)",
+        backdrop: "rgba(0, 0, 0, 0.4)",
         customClass: {
-          popup: "rounded-2xl",
-          title: "text-lg font-bold text-green-800",
+          popup: "rounded-3xl shadow-2xl border-0",
+          container: "backdrop-blur-sm",
         },
       });
     } catch (error) {
@@ -239,26 +267,26 @@ export default function ArticleReader() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen gradient-calm flex items-center justify-center">
+        <div className="glass-card p-8 rounded-3xl text-center">
           <div className="relative">
-            <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 border-t-blue-600 mx-auto mb-6"></div>
-            <div className="absolute inset-0 rounded-full h-16 w-16 border-4 border-transparent border-t-blue-400 animate-pulse mx-auto"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-orange-200 border-t-orange-600 mx-auto mb-6"></div>
+            <div className="absolute inset-0 rounded-full h-16 w-16 border-4 border-transparent border-t-orange-400 animate-pulse mx-auto"></div>
           </div>
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">
+          <h2 className="text-xl font-light text-gray-800 mb-2">
             Loading Article
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 font-light">
             Please wait while we fetch the content...
           </p>
           <div className="mt-4 flex justify-center space-x-1">
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+            <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce"></div>
             <div
-              className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"
+              className="w-2 h-2 bg-orange-500 rounded-full animate-bounce"
               style={{ animationDelay: "0.1s" }}
             ></div>
             <div
-              className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"
+              className="w-2 h-2 bg-orange-500 rounded-full animate-bounce"
               style={{ animationDelay: "0.2s" }}
             ></div>
           </div>
@@ -286,16 +314,16 @@ export default function ArticleReader() {
               />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-3">
+          <h2 className="text-2xl font-light text-gray-800 mb-3">
             Article Not Found
           </h2>
-          <p className="text-gray-600 mb-6 leading-relaxed">
+          <p className="text-gray-600 mb-6 leading-relaxed font-light">
             We couldn't find the article you're looking for. It might have been
             removed or the link might be incorrect.
           </p>
           <Link
             to="/articles"
-            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+            className="inline-flex items-center px-6 py-3 gradient-secondary text-white font-light rounded-xl hover:shadow-lg hover:scale-105 smooth-transition"
           >
             <svg
               className="w-4 h-4 mr-2"
@@ -318,14 +346,14 @@ export default function ArticleReader() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen gradient-calm">
       {/* Enhanced Header */}
-      <div className="bg-white shadow-md border-b border-gray-100 sticky top-0 z-40 backdrop-blur-sm bg-white/95">
+      <div className="glass border-0 border-b border-white/20 sticky top-0 z-40 backdrop-blur-lg">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between py-4">
             <Link
               to="/articles"
-              className="inline-flex items-center px-3 py-2 text-sm font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-all duration-200"
+              className="inline-flex items-center px-4 py-2 text-sm font-light text-orange-600 hover:text-orange-800 glass-button rounded-xl smooth-transition"
             >
               <svg
                 className="w-4 h-4 mr-2"
@@ -345,9 +373,9 @@ export default function ArticleReader() {
 
             <div className="flex items-center space-x-4">
               <div className="hidden sm:flex items-center space-x-4">
-                <div className="flex items-center px-3 py-1 bg-blue-50 rounded-full">
+                <div className="flex items-center px-4 py-2 glass-card rounded-full">
                   <svg
-                    className="w-4 h-4 text-blue-500 mr-1"
+                    className="w-4 h-4 text-orange-500 mr-2"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -359,7 +387,7 @@ export default function ArticleReader() {
                       d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"
                     />
                   </svg>
-                  <span className="text-sm font-medium text-blue-700">
+                  <span className="text-sm font-light text-orange-700">
                     {highlights.length} highlights
                   </span>
                 </div>
@@ -367,11 +395,11 @@ export default function ArticleReader() {
                   href={article.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-all duration-200"
+                  className="inline-flex items-center px-4 py-2 text-sm font-light text-gray-600 hover:text-orange-600 glass-button rounded-xl smooth-transition"
                 >
                   View Original
                   <svg
-                    className="w-4 h-4 ml-1"
+                    className="w-4 h-4 ml-2"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -387,7 +415,7 @@ export default function ArticleReader() {
               </div>
 
               {/* Mobile menu button */}
-              <button className="sm:hidden p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg">
+              <button className="sm:hidden glass-button p-3 text-gray-600 hover:text-gray-900 rounded-xl smooth-transition">
                 <svg
                   className="w-5 h-5"
                   fill="none"
@@ -410,7 +438,13 @@ export default function ArticleReader() {
       {/* Enhanced Article Content */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-4xl mx-auto">
-          <article className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+          <article
+            className="glass-card rounded-3xl overflow-hidden shadow-xl"
+            style={{
+              backdropFilter: "blur(20px)",
+              background: "rgba(255, 255, 255, 0.1)",
+            }}
+          >
             {/* Enhanced Cover Image */}
             <div className="flex justify-content-center">
               {article.cover_image && (
@@ -426,13 +460,13 @@ export default function ArticleReader() {
             </div>
 
             {/* Enhanced Article Header */}
-            <div className="p-6 sm:p-8 lg:p-10 border-b border-gray-100">
+            <div className="p-6 sm:p-8 lg:p-10 border-b border-white/20">
               {/* Tags */}
-              <div className="flex flex-wrap gap-2 mb-6">
+              <div className="flex flex-wrap gap-3 mb-6">
                 {article.tag_list?.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-sm font-medium rounded-full hover:from-blue-200 hover:to-indigo-200 transition-all duration-200"
+                    className="inline-flex items-center px-4 py-2 glass-button gradient-secondary text-white text-sm font-light rounded-xl smooth-transition hover:scale-105"
                   >
                     #{tag}
                   </span>
@@ -440,29 +474,29 @@ export default function ArticleReader() {
               </div>
 
               {/* Title */}
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-light text-gray-800 mb-6 leading-tight">
                 {article.title}
               </h1>
 
               {/* Author Info */}
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <div className="flex items-center space-x-4">
-                  <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-4">
                     <img
                       src={article.user.profile_image}
                       alt={article.user.name}
-                      className="w-12 h-12 rounded-full border-2 border-white shadow-md"
+                      className="w-12 h-12 rounded-full border-2 border-white/30 shadow-lg"
                     />
                     <div>
-                      <p className="font-semibold text-gray-900 text-lg">
+                      <p className="font-light text-gray-800 text-lg">
                         {article.user.name}
                       </p>
-                      <p className="text-gray-600 text-sm">Author</p>
+                      <p className="text-gray-600 text-sm font-light">Author</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-6 text-gray-600">
+                <div className="flex items-center space-x-6 text-gray-600 font-light">
                   <div className="flex items-center space-x-1">
                     <svg
                       className="w-4 h-4"
@@ -538,19 +572,6 @@ export default function ArticleReader() {
             {/* Enhanced Article Body */}
             <div className="p-6 sm:p-8 lg:p-10 prose">
               <Markdown>{article.body_markdown}</Markdown>
-              {/* <div
-                className="prose prose-lg prose-blue max-w-none
-                         prose-headings:text-gray-900 prose-headings:font-bold
-                         prose-p:text-gray-700 prose-p:leading-relaxed prose-p:text-lg
-                         prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline
-                         prose-strong:text-gray-900 prose-strong:font-semibold
-                         prose-code:text-purple-600 prose-code:bg-purple-50 prose-code:px-1 prose-code:py-0.5 prose-code:rounded
-                         prose-pre:bg-gray-900 prose-pre:text-gray-100
-                         prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:bg-blue-50 prose-blockquote:pl-4 prose-blockquote:italic
-                         prose-ul:text-gray-700 prose-ol:text-gray-700
-                         prose-li:text-gray-700 prose-li:leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: article.body_html }}
-              /> */}
             </div>
           </article>
 
@@ -573,47 +594,48 @@ export default function ArticleReader() {
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-blue-900">
-                💡 Interactive Learning Guide
+                <Lightbulb className="w-4 h-4 mr-1 inline" /> Interactive
+                Learning Guide
               </h3>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-blue-800">
-              <div className="bg-white bg-opacity-60 rounded-lg p-4">
-                <div className="flex items-center mb-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+              <div className="glass-card rounded-xl p-6 hover:scale-105 smooth-transition">
+                <div className="flex items-center mb-3">
                   <span className="text-2xl mr-3">🖱️</span>
-                  <span className="font-semibold">Select Text</span>
+                  <span className="font-light text-lg">Select Text</span>
                 </div>
-                <p className="text-sm">
+                <p className="text-sm font-light">
                   Highlight any text in the article that interests you
                 </p>
               </div>
 
-              <div className="bg-white bg-opacity-60 rounded-lg p-4">
-                <div className="flex items-center mb-2">
-                  <span className="text-2xl mr-3">🤖</span>
-                  <span className="font-semibold">Get AI Explanation</span>
+              <div className="glass-card rounded-xl p-6 hover:scale-105 smooth-transition">
+                <div className="flex items-center mb-3">
+                  <Bot className="w-6 h-6 text-orange-600 mr-3" />
+                  <span className="font-light text-lg">Get AI Explanation</span>
                 </div>
-                <p className="text-sm">
+                <p className="text-sm font-light">
                   Click "Explain" for instant AI-powered insights
                 </p>
               </div>
 
-              <div className="bg-white bg-opacity-60 rounded-lg p-4">
-                <div className="flex items-center mb-2">
-                  <span className="text-2xl mr-3">📝</span>
-                  <span className="font-semibold">Save Notes</span>
+              <div className="glass-card rounded-xl p-6 hover:scale-105 smooth-transition">
+                <div className="flex items-center mb-3">
+                  <FileText className="w-6 h-6 text-orange-600 mr-3" />
+                  <span className="font-light text-lg">Save Notes</span>
                 </div>
-                <p className="text-sm">
+                <p className="text-sm font-light">
                   Bookmark important highlights for future reference
                 </p>
               </div>
 
-              <div className="bg-white bg-opacity-60 rounded-lg p-4">
-                <div className="flex items-center mb-2">
-                  <span className="text-2xl mr-3">🔖</span>
-                  <span className="font-semibold">Track Progress</span>
+              <div className="glass-card rounded-xl p-6 hover:scale-105 smooth-transition">
+                <div className="flex items-center mb-3">
+                  <Bookmark className="w-6 h-6 text-orange-600 mr-3" />
+                  <span className="font-light text-lg">Track Progress</span>
                 </div>
-                <p className="text-sm">
+                <p className="text-sm font-light">
                   Access your learning journey from the dashboard
                 </p>
               </div>
@@ -625,14 +647,14 @@ export default function ArticleReader() {
       {/* Enhanced Explanation Popup */}
       {showExplainPopup && (
         <div
-          className="fixed z-50 bg-white border border-blue-200 rounded-xl shadow-2xl p-4 backdrop-blur-sm bg-white/95"
+          className="fixed z-50 glass-card rounded-xl shadow-2xl p-4 backdrop-blur-lg"
           style={{
             left: `${popupPosition.x}px`,
             top: `${popupPosition.y}px`,
             transform: "translate(-50%, -100%)",
           }}
         >
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-3">
             <button
               onClick={(e) => {
                 e.preventDefault();
@@ -644,7 +666,7 @@ export default function ArticleReader() {
                 e.stopPropagation();
               }}
               disabled={explaining}
-              className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition-all duration-200 shadow-md"
+              className="inline-flex items-center px-4 py-2 gradient-secondary text-white rounded-xl hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-light smooth-transition"
             >
               {explaining ? (
                 <>
@@ -670,7 +692,9 @@ export default function ArticleReader() {
                   Explaining...
                 </>
               ) : (
-                <>🤖 Explain</>
+                <>
+                  <Bot className="w-4 h-4 mr-1 inline" /> Explain
+                </>
               )}
             </button>
 

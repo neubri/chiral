@@ -1,6 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
-import { Trash2, Eye, Search, Calendar, BookOpen } from "lucide-react";
+import {
+  Trash2,
+  Eye,
+  Search,
+  Calendar,
+  BookOpen,
+  Bookmark,
+  Bot,
+} from "lucide-react";
 import http from "../lib/http";
 import Swal from "sweetalert2";
 
@@ -84,27 +92,33 @@ function Highlights() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen gradient-calm flex items-center justify-center">
+        <div className="glass-card p-8 rounded-3xl flex flex-col items-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mb-4"></div>
+          <p className="text-gray-600 font-light">Loading your highlights...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
+    <div className="min-h-screen gradient-calm pt-20">
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <div className="mb-8 text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full glass-card mb-4">
+            <Bookmark className="w-8 h-8 text-orange-600" />
+          </div>
+          <h1 className="text-3xl font-light text-gray-800 mb-2">
             My Highlights
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 font-light max-w-2xl mx-auto">
             Manage and review your saved highlights with AI explanations
           </p>
         </div>
 
         {/* Controls */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+        <div className="glass-card rounded-2xl p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             {/* Search */}
             <div className="flex-1 relative">
@@ -114,7 +128,7 @@ function Highlights() {
                 placeholder="Search highlights, explanations, or articles..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-3 glass-button rounded-xl text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-orange-500/50 focus:border-transparent outline-none smooth-transition"
               />
             </div>
 
@@ -122,7 +136,7 @@ function Highlights() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="px-4 py-3 glass-button rounded-xl text-gray-700 font-light focus:ring-2 focus:ring-orange-500/50 focus:border-transparent outline-none smooth-transition"
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
@@ -133,7 +147,7 @@ function Highlights() {
             <select
               value={filterBy}
               onChange={(e) => setFilterBy(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="px-4 py-3 glass-button rounded-xl text-gray-700 font-light focus:ring-2 focus:ring-orange-500/50 focus:border-transparent outline-none smooth-transition"
             >
               <option value="all">All Highlights</option>
               <option value="with-explanation">With AI Explanation</option>
@@ -144,38 +158,38 @@ function Highlights() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="glass-card rounded-2xl p-6 hover:scale-105 smooth-transition">
             <div className="flex items-center">
-              <BookOpen className="w-8 h-8 text-blue-600 mr-3" />
+              <BookOpen className="w-8 h-8 text-orange-600 mr-3" />
               <div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-sm font-light text-gray-600">
                   Total Highlights
                 </p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-2xl font-light text-gray-800">
                   {highlights.length}
                 </p>
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="glass-card rounded-2xl p-6 hover:scale-105 smooth-transition">
             <div className="flex items-center">
-              <Eye className="w-8 h-8 text-green-600 mr-3" />
+              <Eye className="w-8 h-8 text-green-500 mr-3" />
               <div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-sm font-light text-gray-600">
                   With AI Explanation
                 </p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-2xl font-light text-gray-800">
                   {highlights.filter((h) => h.explanation).length}
                 </p>
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="glass-card rounded-2xl p-6 hover:scale-105 smooth-transition">
             <div className="flex items-center">
-              <Calendar className="w-8 h-8 text-purple-600 mr-3" />
+              <Calendar className="w-8 h-8 text-purple-500 mr-3" />
               <div>
-                <p className="text-sm font-medium text-gray-600">This Month</p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-sm font-light text-gray-600">This Month</p>
+                <p className="text-2xl font-light text-gray-800">
                   {
                     highlights.filter((h) => {
                       const highlightDate = new Date(h.createdAt);
@@ -194,14 +208,16 @@ function Highlights() {
 
         {/* Highlights List */}
         {filteredAndSortedHighlights.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-            <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <div className="glass-card rounded-2xl p-12 text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full glass-button mb-4">
+              <BookOpen className="w-8 h-8 text-gray-400" />
+            </div>
+            <h3 className="text-lg font-light text-gray-800 mb-2">
               {searchTerm
                 ? "No matching highlights found"
                 : "No highlights yet"}
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 mb-6 font-light">
               {searchTerm
                 ? "Try adjusting your search or filters"
                 : "Start reading articles and highlighting interesting passages!"}
@@ -209,7 +225,7 @@ function Highlights() {
             {!searchTerm && (
               <Link
                 to="/articles"
-                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                className="inline-flex items-center px-6 py-3 gradient-secondary text-white rounded-xl hover:shadow-lg hover:scale-105 smooth-transition font-light"
               >
                 Browse Articles
               </Link>
@@ -220,29 +236,32 @@ function Highlights() {
             {filteredAndSortedHighlights.map((highlight) => (
               <div
                 key={highlight.id}
-                className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
+                className="glass-card rounded-2xl p-6 hover:scale-[1.01] smooth-transition"
               >
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex-1">
                     {highlight.articleTitle && (
                       <Link
                         to={`/article/${highlight.articleId}`}
-                        className="text-sm font-medium text-blue-600 hover:text-blue-800 mb-2 block"
+                        className="text-sm font-light text-orange-600 hover:text-orange-700 mb-2 block smooth-transition"
                       >
                         📄 {highlight.articleTitle}
                       </Link>
                     )}
-                    <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
-                      <p className="text-gray-800 italic">
+                    <div className="glass-button border-l-4 border-orange-400 p-4 mb-4 rounded-xl">
+                      <p className="text-gray-800 italic font-light">
                         "{highlight.highlightedText}"
                       </p>
                     </div>
                     {highlight.explanation && (
-                      <div className="bg-blue-50 border-l-4 border-blue-400 p-4">
-                        <h4 className="text-sm font-medium text-blue-800 mb-2">
-                          🤖 AI Explanation:
+                      <div className="glass-button border-l-4 border-blue-400 p-4 rounded-xl">
+                        <h4 className="text-sm font-medium text-blue-700 mb-2">
+                          <Bot className="w-4 h-4 mr-1 inline" /> AI
+                          Explanation:
                         </h4>
-                        <p className="text-gray-700">{highlight.explanation}</p>
+                        <p className="text-gray-700 font-light">
+                          {highlight.explanation}
+                        </p>
                       </div>
                     )}
                   </div>
@@ -250,7 +269,7 @@ function Highlights() {
                     {highlight.articleId && (
                       <Link
                         to={`/article/${highlight.articleId}`}
-                        className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                        className="glass-button p-2 rounded-xl text-gray-500 hover:text-orange-600 smooth-transition"
                         title="View Article"
                       >
                         <Eye className="w-5 h-5" />
@@ -258,7 +277,7 @@ function Highlights() {
                     )}
                     <button
                       onClick={() => deleteHighlight(highlight.id)}
-                      className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                      className="glass-button p-2 rounded-xl text-gray-500 hover:text-red-600 smooth-transition"
                       title="Delete Highlight"
                     >
                       <Trash2 className="w-5 h-5" />
@@ -266,7 +285,7 @@ function Highlights() {
                   </div>
                 </div>
                 <div className="flex justify-between items-center text-sm text-gray-500">
-                  <span>
+                  <span className="font-light">
                     {new Date(highlight.createdAt).toLocaleDateString("en-US", {
                       year: "numeric",
                       month: "short",
@@ -276,7 +295,7 @@ function Highlights() {
                     })}
                   </span>
                   {highlight.explanation && (
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-light glass-button text-blue-700">
                       AI Explained
                     </span>
                   )}

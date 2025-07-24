@@ -19,14 +19,14 @@ export default function ArticleCard({ article }) {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-gray-100">
+    <div className="glass-card rounded-2xl hover:scale-[1.02] smooth-transition overflow-hidden border border-white/20 shadow-lg hover:shadow-xl">
       {/* Article Image */}
       {article.social_image && (
         <div className="aspect-video overflow-hidden">
           <img
             src={article.social_image}
             alt={article.title}
-            className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
+            className="w-full h-full object-cover hover:scale-105 smooth-transition"
           />
         </div>
       )}
@@ -38,25 +38,27 @@ export default function ArticleCard({ article }) {
             <img
               src={article.user?.profile_image_90 || "/default-avatar.png"}
               alt={article.user?.name || "Author"}
-              className="w-8 h-8 rounded-full"
+              className="w-8 h-8 rounded-full border border-white/20"
             />
-            <span className="text-sm text-gray-600 font-medium">
+            <span className="text-sm text-gray-600 font-light">
               {article.user?.name || "Anonymous"}
             </span>
           </div>
           <span className="text-gray-400">•</span>
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-gray-500 font-light">
             {formatDate(article.published_at)}
           </span>
         </div>
 
         {/* Title */}
-        <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 hover:text-blue-600 transition-colors">
+        <h3 className="text-xl font-light text-gray-800 mb-3 line-clamp-2 hover:text-orange-600 smooth-transition">
           <Link to={`/article/${article.id}`}>{article.title}</Link>
         </h3>
 
         {/* Description */}
-        <p className="text-gray-600 mb-4 line-clamp-3">{article.description}</p>
+        <p className="text-gray-600 mb-4 line-clamp-3 font-light">
+          {article.description}
+        </p>
 
         {/* Tags */}
         {article.tag_list && article.tag_list.length > 0 && (
@@ -94,7 +96,9 @@ export default function ArticleCard({ article }) {
                   d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <span>{formatReadingTime(article.body_markdown)}</span>
+              <span className="font-light">
+                {formatReadingTime(article.body_markdown)}
+              </span>
             </span>
             <span className="flex items-center space-x-1">
               <svg
@@ -110,7 +114,9 @@ export default function ArticleCard({ article }) {
                   d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                 />
               </svg>
-              <span>{article.public_reactions_count || 0}</span>
+              <span className="font-light">
+                {article.public_reactions_count || 0}
+              </span>
             </span>
             <span className="flex items-center space-x-1">
               <svg
@@ -126,11 +132,16 @@ export default function ArticleCard({ article }) {
                   d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                 />
               </svg>
-              <span>{article.comments_count || 0}</span>
+              <span className="font-light">{article.comments_count || 0}</span>
             </span>
           </div>
 
-          <LinkButton to={`/article/${article.id}`} variant="outline" size="sm">
+          <LinkButton
+            to={`/article/${article.id}`}
+            variant="outline"
+            size="sm"
+            className="rounded-xl"
+          >
             Read More
           </LinkButton>
         </div>
