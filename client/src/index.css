@@ -50,9 +50,9 @@
   transform: translateY(-2px);
 }
 
-/* Gradient Backgrounds */
+/* Gradient Backgrounds - More subtle and refined */
 .gradient-primary {
-  background: linear-gradient(135deg, #f6f4f2 0%, #e8e4e0 100%);
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
 .gradient-secondary {
@@ -62,22 +62,22 @@
 .gradient-calm {
   background: linear-gradient(
     135deg,
-    #f8fafc 0%,
-    #f1f5f9 25%,
-    #e2e8f0 50%,
-    #cbd5e1 75%,
-    #94a3b8 100%
+    #fafbfc 0%,
+    #f5f7fa 25%,
+    #f0f3f7 50%,
+    #e8ecf0 75%,
+    #dfe4ea 100%
   );
 }
 
 .gradient-warm {
   background: linear-gradient(
     135deg,
-    #fef7f0 0%,
-    #fed7aa 25%,
-    #fdba74 50%,
-    #fb923c 75%,
-    #ff5924 100%
+    #fef8f5 0%,
+    #fef2ee 25%,
+    #fdebe6 50%,
+    #fce4de 75%,
+    #fbddd6 100%
   );
 }
 

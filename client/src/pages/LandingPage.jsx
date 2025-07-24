@@ -331,39 +331,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
-      {/* CTA Section */}
-      <section className="gradient-warm py-20">
-        <div className="glass backdrop-blur-lg">
-          <div className="container mx-auto px-6 py-16 text-center">
-            <h2 className="text-3xl md:text-4xl font-light text-gray-800 mb-6">
-              Ready to accelerate your learning?
-            </h2>
-            <p className="text-lg text-gray-700 mb-10 max-w-3xl mx-auto font-light leading-relaxed">
-              Join developers who are building deeper understanding of technical
-              concepts with AI-powered reading assistance and smart note-taking.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-              <LinkButton
-                to="/register"
-                variant="primary"
-                size="xl"
-                className="gradient-secondary text-white border-0 rounded-xl hover:scale-105 smooth-transition shadow-xl backdrop-blur-sm"
-              >
-                Start learning free
-              </LinkButton>
-              <LinkButton
-                to="/login"
-                variant="outline"
-                size="xl"
-                className="glass-button border-white/30 rounded-xl hover:scale-105 smooth-transition text-gray-700"
-              >
-                Sign in to your account
-              </LinkButton>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router";
 import api from "../lib/http";
 import Swal from "sweetalert2";
 import Markdown from "react-markdown";
-import { Lightbulb, Bot, BookOpen, Bookmark, FileText } from "lucide-react";
+import { Lightbulb, Bot, BookOpen, RotateCcw, Target } from "lucide-react";
 
 export default function ArticleReader() {
   const { id } = useParams();
@@ -122,62 +122,60 @@ export default function ArticleReader() {
 
       setHighlights((prev) => [...prev, newHighlight]);
 
-      // Show explanation in enhanced modal with glass-card design
+      // Show explanation in enhanced modal with calm, minimalist design
       Swal.fire({
         title: "",
         html: `
-          <div class="space-y-6">
-            <!-- Header with icon and title -->
+          <div class="space-y-4">
+            <!-- Header with clean design -->
             <div class="text-center mb-6">
-              <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                 </svg>
               </div>
-              <h3 class="text-2xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-                <Lightbulb className="w-6 h-6" /> AI-Powered Explanation
-              </h3>
+              <h3 class="text-lg font-light text-gray-800 mb-1">AI Explanation</h3>
+              <p class="text-sm text-gray-500 font-light">Generated for your selected text</p>
             </div>
 
             <!-- Selected Text Card -->
-            <div class="glass-card rounded-xl p-6 hover:scale-105 smooth-transition" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2);">
-              <div class="flex items-center mb-3">
-                <span class="text-2xl mr-3">🖱️</span>
-                <span class="font-light text-lg text-gray-800">Selected Text</span>
+            <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+              <div class="flex items-center mb-2">
+                <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Selected Text</span>
               </div>
-              <p class="text-gray-700 italic leading-relaxed font-light bg-white/20 p-4 rounded-lg border border-white/30">"${selectedText}"</p>
+              <p class="text-gray-800 font-light leading-relaxed">"${selectedText}"</p>
             </div>
 
             <!-- AI Explanation Card -->
-            <div class="glass-card rounded-xl p-6 hover:scale-105 smooth-transition" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2);">
-              <div class="flex items-center mb-3">
-                <Bot className="w-6 h-6 text-orange-600 mr-3" />
-                <span class="font-light text-lg text-gray-800">AI Explanation</span>
+            <div class="bg-orange-50 rounded-xl p-4 border border-orange-100">
+              <div class="flex items-center mb-2">
+                <svg class="w-4 h-4 text-orange-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+                <span class="text-xs font-medium text-orange-600 uppercase tracking-wide">AI Explanation</span>
               </div>
-              <div class="text-gray-700 leading-relaxed font-light bg-white/20 p-4 rounded-lg border border-white/30">
+              <div class="text-gray-800 font-light leading-relaxed">
                 ${
                   newHighlight.explanation ||
-                  "🔄 Generating detailed explanation..."
+                  "Generating detailed explanation..."
                 }
               </div>
             </div>
           </div>
         `,
-        confirmButtonText: "💾 Save to Notes",
+        confirmButtonText: "Save to Notes",
         showCancelButton: true,
         cancelButtonText: "Close",
         width: "90%",
-        maxWidth: "700px",
-        heightAuto: false,
-        background: "rgba(255, 255, 255, 0.95)",
-        backdrop: "rgba(0, 0, 0, 0.4)",
+        maxWidth: "600px",
+        background: "#ffffff",
+        backdrop: "rgba(0, 0, 0, 0.3)",
         customClass: {
-          popup: "rounded-3xl shadow-2xl border-0",
-          container: "backdrop-blur-sm",
+          popup: "rounded-2xl shadow-xl border-0",
           confirmButton:
-            "glass-card gradient-secondary text-white border-0 rounded-xl px-8 py-3 font-light hover:scale-105 smooth-transition shadow-lg",
+            "bg-orange-600 hover:bg-orange-700 text-white border-0 rounded-xl px-6 py-2 font-light smooth-transition",
           cancelButton:
-            "glass-card bg-white/80 hover:bg-white/90 text-gray-700 border border-white/30 rounded-xl px-8 py-3 font-light hover:scale-105 smooth-transition",
+            "bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200 rounded-xl px-6 py-2 font-light smooth-transition mr-3",
         },
         buttonsStyling: false,
       }).then((result) => {
@@ -220,36 +218,28 @@ export default function ArticleReader() {
         )
       );
 
-      // Enhanced success message with glass-card design
+      // Clean success message with minimalist design
       Swal.fire({
         title: "",
         html: `
           <div class="text-center space-y-4">
-            <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto shadow-lg">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-green-800 mb-2 flex items-center gap-2">
-              <BookOpen className="w-5 h-5" /> Bookmarked Successfully!
-            </h3>
-
-            <div class="glass-card rounded-xl p-6 hover:scale-105 smooth-transition" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2);">
-              <div class="flex items-center mb-3 justify-center">
-                <Bookmark className="w-6 h-6 text-orange-600 mr-3" />
-                <span class="font-light text-lg text-gray-800">Learning Progress</span>
-              </div>
-              <p class="text-gray-700 font-light">Your highlight has been saved to your learning notes and can be accessed from the dashboard.</p>
+            <div>
+              <h3 class="text-lg font-light text-gray-800 mb-1">Saved Successfully!</h3>
+              <p class="text-sm text-gray-500 font-light">Your highlight has been bookmarked and saved to your learning notes.</p>
             </div>
           </div>
         `,
-        timer: 4000,
+        timer: 3000,
         showConfirmButton: false,
-        background: "rgba(255, 255, 255, 0.95)",
-        backdrop: "rgba(0, 0, 0, 0.4)",
+        background: "#ffffff",
+        backdrop: "rgba(0, 0, 0, 0.3)",
         customClass: {
-          popup: "rounded-3xl shadow-2xl border-0",
-          container: "backdrop-blur-sm",
+          popup: "rounded-2xl shadow-lg border-0",
         },
       });
     } catch (error) {
@@ -588,67 +578,42 @@ export default function ArticleReader() {
           </article>
 
           {/* Enhanced Instructions */}
-          <div className="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-6 lg:p-8 shadow-lg">
-            <div className="flex items-center mb-4">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mr-4">
-                <svg
-                  className="w-5 h-5 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-blue-900">
-                <Lightbulb className="w-4 h-4 mr-1 inline" /> Interactive
-                Learning Guide
-              </h3>
-            </div>
-
+          {/* Learning Tips */}
+          <div className="mt-8 glass-card rounded-2xl p-6 border-l-4 border-orange-500">
+            <h3 className="text-lg font-light text-gray-800 mb-4">
+              <Lightbulb className="w-4 h-4 mr-1 inline" /> Learning Tips
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
-              <div className="glass-card rounded-xl p-6 hover:scale-105 smooth-transition">
-                <div className="flex items-center mb-3">
-                  <span className="text-2xl mr-3">🖱️</span>
-                  <span className="font-light text-lg">Select Text</span>
-                </div>
+              <div className="glass-button p-4 rounded-xl">
+                <p className="font-medium mb-1 flex items-center gap-2">
+                  <Target className="w-4 h-4" /> Active Reading
+                </p>
                 <p className="text-sm font-light">
-                  Highlight any text in the article that interests you
+                  Highlight key concepts and terms you want to understand better
                 </p>
               </div>
-
-              <div className="glass-card rounded-xl p-6 hover:scale-105 smooth-transition">
-                <div className="flex items-center mb-3">
-                  <Bot className="w-6 h-6 text-orange-600 mr-3" />
-                  <span className="font-light text-lg">Get AI Explanation</span>
-                </div>
+              <div className="glass-button p-4 rounded-xl">
+                <p className="font-medium mb-1 flex items-center gap-2">
+                  <Bot className="w-4 h-4" /> AI Explanations
+                </p>
                 <p className="text-sm font-light">
-                  Click "Explain" for instant AI-powered insights
+                  Use AI to explain complex topics in simple terms
                 </p>
               </div>
-
-              <div className="glass-card rounded-xl p-6 hover:scale-105 smooth-transition">
-                <div className="flex items-center mb-3">
-                  <FileText className="w-6 h-6 text-orange-600 mr-3" />
-                  <span className="font-light text-lg">Save Notes</span>
-                </div>
+              <div className="glass-button p-4 rounded-xl">
+                <p className="font-medium mb-1 flex items-center gap-2">
+                  <BookOpen className="w-4 h-4" /> Organize Notes
+                </p>
                 <p className="text-sm font-light">
-                  Bookmark important highlights for future reference
+                  Review and organize your highlights into learning notes
                 </p>
               </div>
-
-              <div className="glass-card rounded-xl p-6 hover:scale-105 smooth-transition">
-                <div className="flex items-center mb-3">
-                  <Bookmark className="w-6 h-6 text-orange-600 mr-3" />
-                  <span className="font-light text-lg">Track Progress</span>
-                </div>
+              <div className="glass-button p-4 rounded-xl">
+                <p className="font-medium mb-1 flex items-center gap-2">
+                  <RotateCcw className="w-4 h-4" /> Regular Review
+                </p>
                 <p className="text-sm font-light">
-                  Access your learning journey from the dashboard
+                  Revisit your notes regularly to reinforce learning
                 </p>
               </div>
             </div>
@@ -656,17 +621,17 @@ export default function ArticleReader() {
         </div>
       </div>
 
-      {/* Enhanced Explanation Popup */}
+      {/* Clean Explanation Popup */}
       {showExplainPopup && (
         <div
-          className="fixed z-50 glass-card rounded-xl shadow-2xl p-4 backdrop-blur-lg"
+          className="fixed z-50 bg-white rounded-xl shadow-lg border border-gray-200 p-3 backdrop-blur-sm"
           style={{
             left: `${popupPosition.x}px`,
             top: `${popupPosition.y}px`,
             transform: "translate(-50%, -100%)",
           }}
         >
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2">
             <button
               onClick={(e) => {
                 e.preventDefault();
@@ -678,12 +643,12 @@ export default function ArticleReader() {
                 e.stopPropagation();
               }}
               disabled={explaining}
-              className="inline-flex items-center px-4 py-2 gradient-secondary text-white rounded-xl hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-light smooth-transition"
+              className="inline-flex items-center px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed text-sm font-light smooth-transition"
             >
               {explaining ? (
                 <>
                   <svg
-                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                    className="animate-spin -ml-1 mr-1 h-3 w-3 text-white"
                     fill="none"
                     viewBox="0 0 24 24"
                   >
@@ -705,7 +670,7 @@ export default function ArticleReader() {
                 </>
               ) : (
                 <>
-                  <Bot className="w-4 h-4 mr-1 inline" /> Explain
+                  <Bot className="w-3 h-3 mr-1" /> Explain
                 </>
               )}
             </button>
@@ -715,10 +680,10 @@ export default function ArticleReader() {
                 setShowExplainPopup(false);
                 window.getSelection().removeAllRanges();
               }}
-              className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
+              className="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
             >
               <svg
-                className="w-4 h-4"
+                className="w-3 h-3"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

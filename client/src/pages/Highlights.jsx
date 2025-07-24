@@ -114,7 +114,7 @@ function Highlights() {
   }
 
   return (
-    <div className="min-h-screen gradient-calm pt-20">
+    <div className="min-h-screen gradient-calm">
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8 text-center">

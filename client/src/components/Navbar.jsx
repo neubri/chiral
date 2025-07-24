@@ -70,18 +70,12 @@ export default function Navbar() {
               </div>
               <span className="text-xl font-light text-gray-800">Chiral</span>
               <span className="hidden sm:block text-gray-600 text-sm font-light">
-                Learning Platform
+                Dashboard
               </span>
             </Link>
 
             {/* Navigation Links - Desktop */}
             <div className="hidden lg:flex items-center space-x-6">
-              <Link
-                to="/dashboard"
-                className="text-gray-700 hover:text-orange-600 smooth-transition font-light"
-              >
-                Dashboard
-              </Link>
               <Link
                 to="/articles"
                 className="text-gray-700 hover:text-orange-600 smooth-transition font-light"
