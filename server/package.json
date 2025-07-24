@@ -6,6 +6,8 @@
     "dev": "npx nodemon bin/www",
     "start": "node bin/www",
     "test": "jest --detectOpenHandles --verbose --forceExit --runInBand --coverage",
+    "test:coverage": "jest --config jest.config.json --coverage",
+    "test:watch": "jest --config jest.config.json --watch",
     "db:migrate": "npx sequelize-cli db:migrate",
     "db:seed": "npx sequelize-cli db:seed:all",
     "db:reset": "npx sequelize-cli db:drop && npx sequelize-cli db:create && npx sequelize-cli db:migrate"

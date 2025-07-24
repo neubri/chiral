@@ -1,10 +1,17 @@
-# Chiral-Dev API Documentation (Simplified Core Features)
+# Chiral-Dev API Documentation (Updated)
 
 ## 🎯 **CORE FEATURES OVERVIEW**
 
-Chiral-Dev telah disederhanakan menjadi **MVP (Minimum Viable Product)** yang fokus pada fitur utama:
+Chiral-Dev is a learning platform with AI-powered explanations, featuring:
 
-### **Arsitektur Sederhana:**
+- Public article browsing
+- User authentication (email/password and Google OAuth)
+- AI-powered text explanations using Gemini
+- Personal notes management
+- Highlights management with automatic AI explanations
+- User profile and learning interests
+
+### **Arsitektur:**
 
 ```
 Client (React/Vite) ↔ API Server (Express) ↔ Database (PostgreSQL)
@@ -30,7 +37,7 @@ GET /api/health
 ```json
 {
   "message": "Chiral server is running!",
-  "timestamp": "2025-07-22T08:39:12.086Z",
+  "timestamp": "2025-07-24T08:39:12.086Z",
   "version": "1.0.0"
 }
 ```
@@ -38,8 +45,14 @@ GET /api/health
 #### **2. Public Articles**
 
 ```http
-GET /api/articles?tag=react&per_page=2
+GET /api/articles?tag=react&per_page=20&page=1
 ```
+
+**Query Parameters:**
+
+- `tag` (optional) - Filter by tag
+- `per_page` (optional, default: 20) - Number of articles per page
+- `page` (optional, default: 1) - Page number
 
 **Response:**
 
@@ -70,11 +83,42 @@ GET /api/articles?tag=react&per_page=2
 }
 ```
 
+#### **3. Get Article Detail**
+
+```http
+GET /api/articles/:id
+```
+
+**Response:**
+
+```json
+{
+  "article": {
+    "id": 2636769,
+    "title": "Article Title",
+    "description": "Article description...",
+    "url": "https://dev.to/...",
+    "cover_image": "https://...",
+    "social_image": "https://...",
+    "body_markdown": "# Article content...",
+    "readable_publish_date": "Jul 17",
+    "reading_time_minutes": 14,
+    "tag_list": ["react", "javascript"],
+    "user": {
+      "name": "Author Name",
+      "username": "authorusername",
+      "profile_image": "https://...",
+      "profile_image_90": "https://..."
+    }
+  }
+}
+```
+
 ---
 
 ### **🔐 AUTHENTICATION**
 
-#### **3. Register**
+#### **4. Register**
 
 ```http
 POST /api/auth/register
@@ -109,7 +153,7 @@ POST /api/auth/register
 }
 ```
 
-#### **4. Login**
+#### **5. Login**
 
 ```http
 POST /api/auth/login
@@ -141,7 +185,7 @@ POST /api/auth/login
 }
 ```
 
-#### **5. Google Login**
+#### **6. Google Login**
 
 ```http
 POST /api/google-login
@@ -211,7 +255,7 @@ POST /api/google-login
 }
 ```
 
-#### **6. Update Learning Interests**
+#### **7. Update Learning Interests**
 
 ```http
 PUT /api/auth/interests
@@ -239,7 +283,7 @@ Authorization: Bearer <token>
 
 ### **🤖 AI EXPLAIN (CORE FEATURE)**
 
-#### **7. Explain Text with AI**
+#### **8. Explain Text with AI**
 
 ```http
 POST /api/gemini/explain
@@ -269,7 +313,7 @@ Authorization: Bearer <token>
 
 ### **📝 NOTES MANAGEMENT (CORE FEATURE)**
 
-#### **8. Create Note**
+#### **9. Create Note**
 
 ```http
 POST /api/notes
@@ -303,7 +347,7 @@ Authorization: Bearer <token>
 }
 ```
 
-#### **9. Get Notes**
+#### **10. Get Notes**
 
 ```http
 GET /api/notes?page=1&limit=20
@@ -386,6 +430,256 @@ Authorization: Bearer <token>
 ```json
 {
   "message": "Note deleted successfully"
+}
+```
+
+---
+
+### **🔖 HIGHLIGHTS MANAGEMENT**
+
+#### **13. Create Highlight**
+
+```http
+POST /api/highlights
+Authorization: Bearer <token>
+```
+
+**Request:**
+
+```json
+{
+  "articleId": "2636769",
+  "articleTitle": "Article Title", // optional
+  "articleUrl": "https://dev.to/...", // optional
+  "highlightedText": "This is the highlighted text from the article",
+  "context": "surrounding context", // optional
+  "position": { "start": 100, "end": 200 }, // optional
+  "tags": ["important", "react"], // optional
+  "autoExplain": true // optional, default: true
+}
+```
+
+**Response:**
+
+```json
+{
+  "message": "Highlight created successfully",
+  "highlight": {
+    "id": 1,
+    "userId": 2,
+    "articleId": "2636769",
+    "articleTitle": "Article Title",
+    "articleUrl": "https://dev.to/...",
+    "highlightedText": "This is the highlighted text from the article",
+    "explanation": "AI-generated explanation of the highlighted text",
+    "context": "surrounding context",
+    "position": { "start": 100, "end": 200 },
+    "tags": ["important", "react"],
+    "isBookmarked": false,
+    "createdAt": "2025-07-24T09:40:14.606Z",
+    "updatedAt": "2025-07-24T09:40:14.606Z"
+  }
+}
+```
+
+#### **14. Get Highlights**
+
+```http
+GET /api/highlights?page=1&limit=20&articleId=123&search=async
+Authorization: Bearer <token>
+```
+
+**Query Parameters:**
+
+- `page` (optional, default: 1) - Page number
+- `limit` (optional, default: 20) - Items per page
+- `articleId` (optional) - Filter by article ID
+- `search` (optional) - Search in highlighted text and explanations
+- `isBookmarked` (optional) - Filter bookmarked highlights
+- `sortBy` (optional: newest|oldest|article, default: newest) - Sort order
+
+**Response:**
+
+```json
+{
+  "highlights": [
+    {
+      "id": 1,
+      "userId": 2,
+      "articleId": "2636769",
+      "articleTitle": "Article Title",
+      "articleUrl": "https://dev.to/...",
+      "highlightedText": "This is the highlighted text",
+      "explanation": "AI explanation",
+      "context": "context",
+      "position": { "start": 100, "end": 200 },
+      "tags": ["important"],
+      "isBookmarked": false,
+      "createdAt": "2025-07-24T09:40:14.606Z",
+      "updatedAt": "2025-07-24T09:40:14.606Z"
+    }
+  ],
+  "total": 1,
+  "currentPage": 1,
+  "totalPages": 1
+}
+```
+
+#### **15. Get Highlight by ID**
+
+```http
+GET /api/highlights/:id
+Authorization: Bearer <token>
+```
+
+**Response:**
+
+```json
+{
+  "highlight": {
+    "id": 1,
+    "userId": 2,
+    "articleId": "2636769",
+    "articleTitle": "Article Title",
+    "highlightedText": "This is the highlighted text",
+    "explanation": "AI explanation",
+    "context": "context",
+    "position": { "start": 100, "end": 200 },
+    "tags": ["important"],
+    "isBookmarked": false,
+    "createdAt": "2025-07-24T09:40:14.606Z",
+    "updatedAt": "2025-07-24T09:40:14.606Z"
+  }
+}
+```
+
+#### **16. Update Highlight**
+
+```http
+PUT /api/highlights/:id
+Authorization: Bearer <token>
+```
+
+**Request:**
+
+```json
+{
+  "highlightedText": "Updated highlighted text",
+  "explanation": "Updated explanation",
+  "tags": ["updated", "important"],
+  "isBookmarked": true
+}
+```
+
+**Response:**
+
+```json
+{
+  "message": "Highlight updated successfully",
+  "highlight": {
+    "id": 1,
+    "userId": 2,
+    "articleId": "2636769",
+    "highlightedText": "Updated highlighted text",
+    "explanation": "Updated explanation",
+    "tags": ["updated", "important"],
+    "isBookmarked": true,
+    "createdAt": "2025-07-24T09:40:14.606Z",
+    "updatedAt": "2025-07-24T10:15:30.123Z"
+  }
+}
+```
+
+#### **17. Delete Highlight**
+
+```http
+DELETE /api/highlights/:id
+Authorization: Bearer <token>
+```
+
+**Response:**
+
+```json
+{
+  "message": "Highlight deleted successfully"
+}
+```
+
+#### **18. Explain Highlight**
+
+```http
+POST /api/highlights/:id/explain
+Authorization: Bearer <token>
+```
+
+**Request:**
+
+```json
+{
+  "context": "additional context for better explanation" // optional
+}
+```
+
+**Response:**
+
+```json
+{
+  "message": "Explanation generated successfully",
+  "explanation": "AI-generated explanation of the highlighted text",
+  "highlight": {
+    "id": 1,
+    "highlightedText": "The highlighted text",
+    "explanation": "AI-generated explanation of the highlighted text",
+    "updatedAt": "2025-07-24T10:20:45.789Z"
+  }
+}
+```
+
+#### **19. Get Article Highlights**
+
+```http
+GET /api/articles/:articleId/highlights
+Authorization: Bearer <token>
+```
+
+**Response:**
+
+```json
+{
+  "highlights": [
+    {
+      "id": 1,
+      "userId": 2,
+      "articleId": "2636769",
+      "highlightedText": "This is highlighted text",
+      "explanation": "AI explanation",
+      "position": { "start": 100, "end": 200 },
+      "tags": ["important"],
+      "isBookmarked": false,
+      "createdAt": "2025-07-24T09:40:14.606Z"
+    }
+  ],
+  "total": 1
+}
+```
+
+#### **20. Get User Articles by Interests**
+
+```http
+GET /api/my-articles?page=1&per_page=20
+Authorization: Bearer <token>
+```
+
+**Response:**
+
+```json
+{
+  "articles": [
+    // Same format as public articles
+  ],
+  "total": 10,
+  "page": 1,
+  "per_page": 20
 }
 ```
 
