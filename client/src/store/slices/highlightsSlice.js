@@ -210,9 +210,12 @@ const initialState = {
   },
   filters: {
     search: "",
+    searchTerm: "", // For client-side filtering
     articleId: "",
     tags: "",
     isBookmarked: undefined,
+    sortBy: "newest", // For client-side sorting
+    filterBy: "all", // For client-side filtering
     page: 1,
     limit: 10,
   },

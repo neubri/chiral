@@ -186,7 +186,7 @@ export default function ArticleReader() {
         }
       });
     } catch (error) {
-      console.error("❌ Error explaining text:", error);
+      console.error("Error explaining text:", error);
       console.error("Error details:", error.response?.data || error.message);
       Swal.fire({
         icon: "error",
@@ -445,19 +445,17 @@ export default function ArticleReader() {
               background: "rgba(255, 255, 255, 0.1)",
             }}
           >
-            {/* Enhanced Cover Image */}
-            <div className="flex justify-content-center">
-              {article.cover_image && (
-                <div className="relative aspect-video bg-gradient-to-r from-blue-400 to-purple-500 overflow-hidden">
-                  <img
-                    src={article.cover_image}
-                    alt={article.title}
-                    className="w-full h-full object-cover "
-                  />
-                  <div className="absolute inset-0  bg-opacity-20"></div>
-                </div>
-              )}
-            </div>
+            {/* Enhanced Cover Image - PROPERLY CENTERED */}
+            {article.cover_image && (
+              <div className="relative aspect-video bg-gradient-to-r from-blue-400 to-purple-500 overflow-hidden flex items-center justify-center">
+                <img
+                  src={article.cover_image}
+                  alt={article.title}
+                  className="max-w-full max-h-full object-contain"
+                />
+                <div className="absolute inset-0 bg-opacity-20"></div>
+              </div>
+            )}
 
             {/* Enhanced Article Header */}
             <div className="p-6 sm:p-8 lg:p-10 border-b border-white/20">
@@ -570,8 +568,22 @@ export default function ArticleReader() {
             </div>
 
             {/* Enhanced Article Body */}
-            <div className="p-6 sm:p-8 lg:p-10 prose">
-              <Markdown>{article.body_markdown}</Markdown>
+            <div className="p-6 sm:p-8 lg:p-10 prose max-w-none">
+              <Markdown
+                components={{
+                  img: ({ alt, src, title, ...props }) => (
+                    <img
+                      src={src}
+                      alt={alt}
+                      title={title}
+                      className="rounded-lg max-w-full h-auto mx-auto block my-4"
+                      {...props}
+                    />
+                  ),
+                }}
+              >
+                {article.body_markdown}
+              </Markdown>
             </div>
           </article>
 

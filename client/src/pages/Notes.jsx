@@ -65,8 +65,8 @@ function Notes() {
       if (editingNote) {
         await dispatch(
           updateNote({
-            id: editingNote.id,
-            data: formData,
+            noteId: editingNote.id,
+            noteData: formData,
           })
         ).unwrap();
         Swal.fire("Success", "Note updated successfully!", "success");
@@ -99,7 +99,7 @@ function Notes() {
 
     if (result.isConfirmed) {
       try {
-        await dispatch(deleteNote(id)).unwrap();
+        await dispatch(deleteNote({ noteId: id })).unwrap();
         Swal.fire("Deleted!", "Note has been deleted.", "success");
       } catch (error) {
         console.error("Error deleting note:", error);
@@ -113,8 +113,8 @@ function Notes() {
       const updatedNote = { ...note, isFavorite: !note.isFavorite };
       await dispatch(
         updateNote({
-          id: note.id,
-          data: updatedNote,
+          noteId: note.id,
+          noteData: updatedNote,
         })
       ).unwrap();
     } catch (error) {
@@ -155,14 +155,15 @@ function Notes() {
 
   const filteredAndSortedNotes = notes
     .filter((note) => {
+      const searchTerm = filters?.searchTerm || "";
       const matchesSearch =
-        note.title.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
-        note.content.toLowerCase().includes(filters.searchTerm.toLowerCase());
+        note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        note.content.toLowerCase().includes(searchTerm.toLowerCase());
 
-      if (filters.filterBy === "all") return matchesSearch;
-      if (filters.filterBy === "favorites")
-        return matchesSearch && note.isFavorite;
-      if (filters.filterBy === "recent") {
+      const filterBy = filters?.filterBy || "all";
+      if (filterBy === "all") return matchesSearch;
+      if (filterBy === "favorites") return matchesSearch && note.isFavorite;
+      if (filterBy === "recent") {
         const noteDate = new Date(note.updatedAt || note.createdAt);
         const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
         return matchesSearch && noteDate > weekAgo;
@@ -171,15 +172,16 @@ function Notes() {
       return matchesSearch;
     })
     .sort((a, b) => {
-      if (filters.sortBy === "newest")
+      const sortBy = filters?.sortBy || "newest";
+      if (sortBy === "newest")
         return (
           new Date(b.updatedAt || b.createdAt) -
           new Date(a.updatedAt || a.createdAt)
         );
-      if (filters.sortBy === "oldest")
+      if (sortBy === "oldest")
         return new Date(a.createdAt) - new Date(b.createdAt);
-      if (filters.sortBy === "title") return a.title.localeCompare(b.title);
-      if (filters.sortBy === "favorites")
+      if (sortBy === "title") return a.title.localeCompare(b.title);
+      if (sortBy === "favorites")
         return (b.isFavorite ? 1 : 0) - (a.isFavorite ? 1 : 0);
       return 0;
     });
@@ -310,9 +312,78 @@ code block
                 ) : (
                   <div className="w-full min-h-[200px] px-4 py-3 glass-card rounded-xl text-gray-800 overflow-auto">
                     {formData.content ? (
-                      <Markdown className="prose prose-sm max-w-none prose-headings:text-gray-800 prose-p:text-gray-700 prose-a:text-orange-600 prose-code:text-orange-600 prose-code:bg-orange-50 prose-code:px-1 prose-code:rounded">
-                        {formData.content}
-                      </Markdown>
+                      <div className="markdown-preview">
+                        <Markdown
+                          components={{
+                            h1: ({ children }) => (
+                              <h1 className="text-2xl font-bold mb-4 text-gray-800">
+                                {children}
+                              </h1>
+                            ),
+                            h2: ({ children }) => (
+                              <h2 className="text-xl font-semibold mb-3 text-gray-800">
+                                {children}
+                              </h2>
+                            ),
+                            h3: ({ children }) => (
+                              <h3 className="text-lg font-medium mb-2 text-gray-800">
+                                {children}
+                              </h3>
+                            ),
+                            p: ({ children }) => (
+                              <p className="mb-3 text-gray-700 leading-relaxed">
+                                {children}
+                              </p>
+                            ),
+                            ul: ({ children }) => (
+                              <ul className="list-disc list-inside mb-3 text-gray-700">
+                                {children}
+                              </ul>
+                            ),
+                            ol: ({ children }) => (
+                              <ol className="list-decimal list-inside mb-3 text-gray-700">
+                                {children}
+                              </ol>
+                            ),
+                            li: ({ children }) => (
+                              <li className="mb-1">{children}</li>
+                            ),
+                            strong: ({ children }) => (
+                              <strong className="font-semibold text-gray-800">
+                                {children}
+                              </strong>
+                            ),
+                            em: ({ children }) => (
+                              <em className="italic">{children}</em>
+                            ),
+                            code: ({ children }) => (
+                              <code className="bg-orange-50 text-orange-600 px-1 py-0.5 rounded text-sm font-mono">
+                                {children}
+                              </code>
+                            ),
+                            pre: ({ children }) => (
+                              <pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto mb-3">
+                                {children}
+                              </pre>
+                            ),
+                            a: ({ children, href }) => (
+                              <a
+                                href={href}
+                                className="text-orange-600 hover:text-orange-700 underline"
+                              >
+                                {children}
+                              </a>
+                            ),
+                            blockquote: ({ children }) => (
+                              <blockquote className="border-l-4 border-orange-400 pl-4 italic text-gray-600 mb-3">
+                                {children}
+                              </blockquote>
+                            ),
+                          }}
+                        >
+                          {formData.content}
+                        </Markdown>
+                      </div>
                     ) : (
                       <p className="text-gray-500 italic">
                         Nothing to preview yet. Start writing in the Write tab.
@@ -373,7 +444,7 @@ code block
               <input
                 type="text"
                 placeholder="Search notes by title or content..."
-                value={filters.searchTerm}
+                value={filters?.searchTerm || ""}
                 onChange={(e) => handleSearchChange(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 glass-button rounded-xl text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-orange-500/50 focus:border-transparent outline-none smooth-transition"
               />
@@ -381,7 +452,7 @@ code block
 
             {/* Sort */}
             <select
-              value={filters.sortBy}
+              value={filters?.sortBy || "newest"}
               onChange={(e) => handleSortChange(e.target.value)}
               className="px-4 py-3 glass-button rounded-xl text-gray-700 font-light focus:ring-2 focus:ring-orange-500/50 focus:border-transparent outline-none smooth-transition"
             >
@@ -393,7 +464,7 @@ code block
 
             {/* Filter */}
             <select
-              value={filters.filterBy}
+              value={filters?.filterBy || "all"}
               onChange={(e) => handleFilterChange(e.target.value)}
               className="px-4 py-3 glass-button rounded-xl text-gray-700 font-light focus:ring-2 focus:ring-orange-500/50 focus:border-transparent outline-none smooth-transition"
             >
@@ -456,14 +527,14 @@ code block
               <FileText className="w-8 h-8 text-gray-400" />
             </div>
             <h3 className="text-lg font-light text-gray-800 mb-2">
-              {filters.searchTerm ? "No matching notes found" : "No notes yet"}
+              {filters?.searchTerm ? "No matching notes found" : "No notes yet"}
             </h3>
             <p className="text-gray-600 mb-6 font-light">
-              {filters.searchTerm
+              {filters?.searchTerm
                 ? "Try adjusting your search or filters"
                 : "Create your first note to get started!"}
             </p>
-            {!filters.searchTerm && (
+            {!filters?.searchTerm && (
               <button
                 onClick={() => {
                   setIsCreating(true);
@@ -528,7 +599,61 @@ code block
                 </div>
 
                 <div className="text-gray-600 text-sm mb-4 line-clamp-3 font-light overflow-hidden">
-                  <Markdown className="prose prose-sm max-w-none prose-headings:text-gray-700 prose-p:text-gray-600 prose-a:text-orange-600 prose-code:text-orange-600 prose-code:bg-orange-50 prose-code:px-1 prose-code:rounded prose-p:mb-1 prose-headings:mb-1 prose-headings:mt-1">
+                  <Markdown
+                    components={{
+                      h1: ({ children }) => (
+                        <h1 className="text-base font-semibold text-gray-700 mb-1">
+                          {children}
+                        </h1>
+                      ),
+                      h2: ({ children }) => (
+                        <h2 className="text-base font-medium text-gray-700 mb-1">
+                          {children}
+                        </h2>
+                      ),
+                      h3: ({ children }) => (
+                        <h3 className="text-sm font-medium text-gray-700 mb-1">
+                          {children}
+                        </h3>
+                      ),
+                      p: ({ children }) => (
+                        <p className="text-sm text-gray-600 mb-1 leading-relaxed">
+                          {children}
+                        </p>
+                      ),
+                      ul: ({ children }) => (
+                        <ul className="list-disc list-inside text-sm text-gray-600">
+                          {children}
+                        </ul>
+                      ),
+                      ol: ({ children }) => (
+                        <ol className="list-decimal list-inside text-sm text-gray-600">
+                          {children}
+                        </ol>
+                      ),
+                      li: ({ children }) => (
+                        <li className="text-sm">{children}</li>
+                      ),
+                      strong: ({ children }) => (
+                        <strong className="font-semibold text-gray-700">
+                          {children}
+                        </strong>
+                      ),
+                      em: ({ children }) => (
+                        <em className="italic">{children}</em>
+                      ),
+                      code: ({ children }) => (
+                        <code className="bg-orange-50 text-orange-600 px-1 rounded text-xs">
+                          {children}
+                        </code>
+                      ),
+                      a: ({ children, href }) => (
+                        <a href={href} className="text-orange-600 underline">
+                          {children}
+                        </a>
+                      ),
+                    }}
+                  >
                     {note.content.length > 150
                       ? `${note.content.substring(0, 150)}...`
                       : note.content}

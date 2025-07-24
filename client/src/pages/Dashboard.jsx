@@ -14,6 +14,8 @@ import {
   Plus,
   Lightbulb,
   Bot,
+  Target,
+  RotateCcw,
 } from "lucide-react";
 
 export default function Dashboard() {
@@ -91,7 +93,7 @@ export default function Dashboard() {
                   Total Highlights
                 </p>
                 <p className="text-3xl font-light text-gray-800">
-                  {stats.totalHighlights}
+                  {stats?.totalHighlights || 0}
                 </p>
               </div>
               <div className="opacity-70">
@@ -107,7 +109,7 @@ export default function Dashboard() {
                   Learning Notes
                 </p>
                 <p className="text-3xl font-light text-gray-800">
-                  {stats.totalNotes}
+                  {stats?.totalNotes || 0}
                 </p>
               </div>
               <div className="opacity-70">
@@ -123,7 +125,7 @@ export default function Dashboard() {
                   Articles Read
                 </p>
                 <p className="text-3xl font-light text-gray-800">
-                  {stats.articlesRead}
+                  {stats?.articlesRead || 0}
                 </p>
               </div>
               <div className="opacity-70">
@@ -139,7 +141,7 @@ export default function Dashboard() {
                   This Week
                 </p>
                 <p className="text-3xl font-light text-gray-800">
-                  {stats.thisWeekHighlights}
+                  {stats?.thisWeekHighlights || 0}
                 </p>
               </div>
               <div className="opacity-70">
@@ -165,9 +167,9 @@ export default function Dashboard() {
               </Link>
             </div>
 
-            {recentHighlights.length > 0 ? (
+            {(recentHighlights || []).length > 0 ? (
               <div className="space-y-4">
-                {recentHighlights.map((highlight) => (
+                {(recentHighlights || []).map((highlight) => (
                   <div
                     key={highlight.id}
                     className="glass-button p-4 rounded-xl border-l-4 border-orange-500"
@@ -217,15 +219,15 @@ export default function Dashboard() {
               </Link>
             </div>
 
-            {recentNotes.length > 0 ? (
+            {(recentNotes || []).length > 0 ? (
               <div className="space-y-4">
-                {recentNotes.map((note) => (
+                {(recentNotes || []).map((note) => (
                   <div
                     key={note.id}
                     className="glass-button p-4 rounded-xl border-l-4 border-green-500"
                   >
                     <p className="text-gray-800 mb-2 line-clamp-2 font-light">
-                      "{note.highlightedText}"
+                      "{note.title || note.content || note.highlightedText}"
                     </p>
                     {note.explanation && (
                       <p className="text-sm text-gray-600 mb-2 line-clamp-2 font-light">
@@ -260,7 +262,9 @@ export default function Dashboard() {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
             <div className="glass-button p-4 rounded-xl">
-              <p className="font-medium mb-1">🎯 Active Reading</p>
+              <p className="font-medium mb-1 flex items-center gap-2">
+                <Target className="w-4 h-4" /> Active Reading
+              </p>
               <p className="text-sm font-light">
                 Highlight key concepts and terms you want to understand better
               </p>
@@ -282,7 +286,9 @@ export default function Dashboard() {
               </p>
             </div>
             <div className="glass-button p-4 rounded-xl">
-              <p className="font-medium mb-1">🔄 Regular Review</p>
+              <p className="font-medium mb-1 flex items-center gap-2">
+                <RotateCcw className="w-4 h-4" /> Regular Review
+              </p>
               <p className="text-sm font-light">
                 Revisit your notes regularly to reinforce learning
               </p>

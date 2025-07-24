@@ -47,7 +47,7 @@ function Highlights() {
 
     if (result.isConfirmed) {
       try {
-        await dispatch(deleteHighlight(id)).unwrap();
+        await dispatch(deleteHighlight({ highlightId: id })).unwrap();
         Swal.fire("Deleted!", "Highlight has been deleted.", "success");
       } catch (error) {
         console.error("Error deleting highlight:", error);
@@ -70,31 +70,34 @@ function Highlights() {
 
   const filteredAndSortedHighlights = highlights
     .filter((highlight) => {
+      const searchTerm = filters?.searchTerm || "";
       const matchesSearch =
         highlight.highlightedText
           .toLowerCase()
-          .includes(filters.searchTerm.toLowerCase()) ||
+          .includes(searchTerm.toLowerCase()) ||
         highlight.explanation
           ?.toLowerCase()
-          .includes(filters.searchTerm.toLowerCase()) ||
+          .includes(searchTerm.toLowerCase()) ||
         highlight.articleTitle
           ?.toLowerCase()
-          .includes(filters.searchTerm.toLowerCase());
+          .includes(searchTerm.toLowerCase());
 
-      if (filters.filterBy === "all") return matchesSearch;
-      if (filters.filterBy === "with-explanation")
+      const filterBy = filters?.filterBy || "all";
+      if (filterBy === "all") return matchesSearch;
+      if (filterBy === "with-explanation")
         return matchesSearch && highlight.explanation;
-      if (filters.filterBy === "without-explanation")
+      if (filterBy === "without-explanation")
         return matchesSearch && !highlight.explanation;
 
       return matchesSearch;
     })
     .sort((a, b) => {
-      if (filters.sortBy === "newest")
+      const sortBy = filters?.sortBy || "newest";
+      if (sortBy === "newest")
         return new Date(b.createdAt) - new Date(a.createdAt);
-      if (filters.sortBy === "oldest")
+      if (sortBy === "oldest")
         return new Date(a.createdAt) - new Date(b.createdAt);
-      if (filters.sortBy === "article")
+      if (sortBy === "article")
         return (a.articleTitle || "").localeCompare(b.articleTitle || "");
       return 0;
     });
@@ -135,7 +138,7 @@ function Highlights() {
               <input
                 type="text"
                 placeholder="Search highlights, explanations, or articles..."
-                value={filters.searchTerm}
+                value={filters?.searchTerm || ""}
                 onChange={(e) => handleSearchChange(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 glass-button rounded-xl text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-orange-500/50 focus:border-transparent outline-none smooth-transition"
               />
@@ -143,7 +146,7 @@ function Highlights() {
 
             {/* Sort */}
             <select
-              value={filters.sortBy}
+              value={filters?.sortBy || "newest"}
               onChange={(e) => handleSortChange(e.target.value)}
               className="px-4 py-3 glass-button rounded-xl text-gray-700 font-light focus:ring-2 focus:ring-orange-500/50 focus:border-transparent outline-none smooth-transition"
             >
@@ -154,7 +157,7 @@ function Highlights() {
 
             {/* Filter */}
             <select
-              value={filters.filterBy}
+              value={filters?.filterBy || "all"}
               onChange={(e) => handleFilterChange(e.target.value)}
               className="px-4 py-3 glass-button rounded-xl text-gray-700 font-light focus:ring-2 focus:ring-orange-500/50 focus:border-transparent outline-none smooth-transition"
             >
@@ -222,16 +225,16 @@ function Highlights() {
               <BookOpen className="w-8 h-8 text-gray-400" />
             </div>
             <h3 className="text-lg font-light text-gray-800 mb-2">
-              {filters.searchTerm
+              {filters?.searchTerm
                 ? "No matching highlights found"
                 : "No highlights yet"}
             </h3>
             <p className="text-gray-600 mb-6 font-light">
-              {filters.searchTerm
+              {filters?.searchTerm
                 ? "Try adjusting your search or filters"
                 : "Start reading articles and highlighting interesting passages!"}
             </p>
-            {!filters.searchTerm && (
+            {!filters?.searchTerm && (
               <Link
                 to="/articles"
                 className="inline-flex items-center px-6 py-3 gradient-secondary text-white rounded-xl hover:shadow-lg hover:scale-105 smooth-transition font-light"
@@ -254,7 +257,8 @@ function Highlights() {
                         to={`/article/${highlight.articleId}`}
                         className="text-sm font-light text-orange-600 hover:text-orange-700 mb-2 block smooth-transition"
                       >
-                        📄 {highlight.articleTitle}
+                        <BookOpen className="w-4 h-4 mr-1 inline" />{" "}
+                        {highlight.articleTitle}
                       </Link>
                     )}
                     <div className="glass-button border-l-4 border-orange-400 p-4 mb-4 rounded-xl">

@@ -136,31 +136,43 @@ export const useDashboard = () => {
 
   const dashboardStats = useCallback(() => {
     const uniqueArticles = new Set(
-      highlights.highlights.map((h) => h.articleId)
+      (highlights.highlights || []).map((h) => h.articleId)
     ).size;
 
+    // Calculate stats from actual data arrays instead of stats objects
+    const totalHighlights = (highlights.highlights || []).length;
+    const totalNotes = (notes.notes || []).length;
+
+    // Calculate this week's highlights
+    const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const thisWeekHighlights = (highlights.highlights || []).filter(
+      (h) => new Date(h.createdAt) > oneWeekAgo
+    ).length;
+
     return {
-      totalHighlights: highlights.stats.total,
-      totalNotes: notes.stats.total,
+      totalHighlights,
+      totalNotes,
       articlesRead: uniqueArticles,
-      thisWeekHighlights: highlights.stats.thisWeek,
-      favoriteNotes: notes.stats.favorites,
-      bookmarkedHighlights: highlights.stats.bookmarked,
+      thisWeekHighlights,
+      favoriteNotes: (notes.notes || []).filter((n) => n.isFavorite).length,
+      bookmarkedHighlights: (highlights.highlights || []).filter(
+        (h) => h.isBookmarked
+      ).length,
     };
-  }, [highlights.highlights, highlights.stats, notes.stats]);
+  }, [highlights.highlights, notes.notes]);
 
   const isLoading = auth.loading || notes.loading || highlights.loading;
   const hasError = auth.error || notes.error || highlights.error;
 
   return {
     user: auth.user,
-    recentNotes: notes.notes.slice(0, 5),
-    recentHighlights: highlights.highlights.slice(0, 5),
+    recentNotes: (notes.notes || []).slice(0, 5),
+    recentHighlights: (highlights.highlights || []).slice(0, 5),
     stats: dashboardStats(),
     isLoading,
     hasError,
-    needsRefresh: ui.needsRefresh,
-    lastRefresh: ui.lastRefresh,
+    needsRefresh: ui?.needsRefresh || false,
+    lastRefresh: ui?.lastRefresh || null,
   };
 };
 
