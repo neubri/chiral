@@ -163,7 +163,7 @@ export default function ArticleReader() {
             </div>
           </div>
         `,
-        confirmButtonText: "Save to Notes",
+        confirmButtonText: "Save to Highlights",
         showCancelButton: true,
         cancelButtonText: "Close",
         width: "90%",
