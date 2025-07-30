@@ -11,7 +11,6 @@ export default function Register() {
     name: "",
     email: "",
     password: "",
-    confirmPassword: "",
   });
   const { loading, dispatch } = useAuth();
   const navigate = useNavigate();
@@ -28,11 +27,6 @@ export default function Register() {
 
     if (formData.password.length < 6) {
       toast.error("Password must be at least 6 characters long");
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      toast.error("Passwords do not match");
       return;
     }
 
